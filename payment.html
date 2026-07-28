@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | QwickDesk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-pattern flex flex-col items-center justify-center min-h-screen p-4">
+    
+    <div class="w-full max-w-lg">
+        <!-- Logo & Trust -->
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-extrabold text-white mb-2">Secure Checkout</h1>
+            <p class="text-emerald-400 text-sm font-semibold"><i class="fas fa-lock mr-1"></i> 256-bit Encrypted Connection</p>
+        </div>
+
+        <div class="glass p-8 rounded-3xl shadow-2xl border border-gray-700">
+            <!-- Order Summary -->
+            <div class="bg-gray-900/60 p-5 rounded-2xl mb-6 border border-gray-700 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Selected Plan</p>
+                    <p class="text-lg font-bold text-white" id="planName">Loading...</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Total</p>
+                    <p class="text-2xl font-bold text-emerald-400" id="planAmount">₹0</p>
+                </div>
+            </div>
+            
+            <!-- QR Section -->
+            <div class="bg-white p-6 rounded-2xl mb-6 flex flex-col items-center justify-center shadow-inner relative overflow-hidden group">
+                <div class="absolute inset-0 bg-blue-50/50"></div>
+                <!-- ADD YOUR QR IMAGE HERE -->
+                <div class="w-48 h-48 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center relative z-10">
+                    <div class="text-center text-gray-400 text-sm">
+                        <i class="fas fa-qrcode text-3xl mb-2"></i><br>Insert QR Image Here
+                    </div>
+                </div>
+                <p class="text-gray-500 text-xs font-semibold mt-4 relative z-10">Scan with GPay, PhonePe or Paytm</p>
+            </div>
+
+            <!-- UPI ID Copy -->
+            <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl mb-8 border border-gray-700">
+                <div class="flex items-center gap-3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/272/272338.png" class="w-6 h-6 grayscale opacity-70">
+                    <span class="text-sm font-mono text-gray-200" id="upiId">shjadhav112-3@okaxis</span>
+                </div>
+                <button onclick="copyUPI()" class="text-blue-400 hover:text-white transition flex items-center gap-2 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/30 text-xs font-bold">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+
+            <!-- UTR Form -->
+            <form id="paymentForm" class="space-y-5">
+                <div>
+                    <label class="block text-gray-300 text-sm font-bold mb-2">Submit Payment Reference (UTR)</label>
+                    <div class="relative">
+                        <i class="fas fa-hashtag absolute left-4 top-4 text-gray-500"></i>
+                        <input type="text" id="utr" class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-gray-900/50 border border-gray-600 focus:border-emerald-500 outline-none text-white font-mono transition" placeholder="12-digit UTR No. (e.g. 312345678901)" required>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:scale-[1.02] text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 transition text-lg flex justify-center items-center gap-2">
+                    Submit Payment Info <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <!-- Success Message -->
+            <div id="successMsg" class="hidden-section mt-6 p-4 bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-sm rounded-xl text-center flex items-center justify-center gap-3">
+                <i class="fas fa-check-circle text-2xl"></i>
+                <div class="text-left">
+                    <p class="font-bold">Verification Submitted!</p>
+                    <p class="text-xs opacity-80">Redirecting to dashboard...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const docSnap = await getDoc(doc(db, "clients", user.uid));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('planName').innerText = data.planName;
+                    document.getElementById('planAmount').innerText = `₹${data.planAmount}`;
+                    if(data.status === 'Pending Verification' || data.status === 'Active') {
+                        window.location.href = 'dashboard.html';
+                    }
+                }
+            } else { window.location.href = 'login.html'; }
+        });
+
+        window.copyUPI = () => {
+            navigator.clipboard.writeText('shjadhav112-3@okaxis');
+            alert('UPI ID Copied to clipboard!');
+        };
+
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+            
+            const utr = document.getElementById('utr').value;
+            if(currentUser) {
+                await updateDoc(doc(db, "clients", currentUser.uid), { utr: utr, status: "Pending Verification" });
+                document.getElementById('paymentForm').classList.add('hidden-section');
+                document.getElementById('successMsg').classList.remove('hidden-section');
+                setTimeout(() => window.location.href = 'dashboard.html', 3000);
+            }
+        });
+    </script>
+</body>
+</html>
