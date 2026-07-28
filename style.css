@@ -1,0 +1,36 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Smooth scrolling behavior */
+    scroll-behavior: smooth;
+}
+
+/* Premium Glassmorphism Effect */
+.glass {
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Hide Elements Smoothly */
+.hidden-section {
+    display: none !important;
+}
+
+/* Custom Scrollbar for Mobile & Desktop */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #111827; 
+}
+::-webkit-scrollbar-thumb {
+    background: #3b82f6; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #2563eb; 
+}
