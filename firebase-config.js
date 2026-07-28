@@ -1,23 +1,23 @@
-// Firebase SDKs
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// Your QwickDeskSolutions Firebase Config
+// Tumhari Firebase project ki exact keys
 const firebaseConfig = {
-    apiKey: "AIzaSyBJT5XK0BcMt3uoJENxDqjvl1xf04K1XDM",
-    authDomain: "qwickdesksolutions.firebaseapp.com",
-    projectId: "qwickdesksolutions",
-    storageBucket: "qwickdesksolutions.firebasestorage.app",
-    messagingSenderId: "508191640643",
-    appId: "1:508191640643:web:42576f5d75aafea9ef58f6"
+  apiKey: "AIzaSyBJTSXKOBcMt3uoJENxDqjvl1xfO4K1XDM",
+  authDomain: "qwickdesksolutions.firebaseapp.com",
+  projectId: "qwickdesksolutions",
+  storageBucket: "qwickdesksolutions.firebasestorage.app",
+  messagingSenderId: "508191640643",
+  appId: "1:508191640643:web:42576f5d75aafea9ef58f6"
 };
 
-// Initialize everything ONCE
+// Firebase initialize karna
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
 
-// Export to use in other JS files
-export { auth, db, googleProvider };
+// Authentication aur Database setup
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
+
+export { auth, provider, db };
