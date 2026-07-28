@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Command Center | QwickDeskSolutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen px-4 py-8 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed">
+
+    <div class="max-w-2xl mx-auto space-y-6">
+        <div class="glass p-6 rounded-2xl border-l-4 border-red-500 shadow-xl flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-white">Admin Command Center</h1>
+                <p class="text-xs text-gray-400">Verify UTR submissions and activate client portals.</p>
+            </div>
+            <a href="dashboard.html" class="text-xs bg-gray-800 px-3 py-2 rounded border border-gray-700 text-gray-300">Client View</a>
+        </div>
+
+        <!-- Pending Payments List -->
+        <div class="glass p-6 rounded-2xl shadow-xl space-y-4">
+            <h2 class="text-sm uppercase text-red-400 font-bold tracking-wider border-b border-gray-700 pb-2">Pending UTR Verifications</h2>
+            <div id="paymentsList" class="space-y-3">
+                <p class="text-xs text-gray-500">Loading pending requests...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJT5XK0BcMt3uoJENxDqjvl1xf04K1XDM",
+            authDomain: "qwickdesksolutions.firebaseapp.com",
+            projectId: "qwickdesksolutions",
+            storageBucket: "qwickdesksolutions.firebasestorage.app",
+            messagingSenderId: "508191640643",
+            appId: "1:508191640643:web:42576f5d75aafea9ef58f6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadPendingPayments() {
+            const listEl = document.getElementById('paymentsList');
+            listEl.innerHTML = "";
+            
+            const q = query(collection(db, "payments"), where("status", "==", "Pending"));
+            const querySnapshot = await getDocs(q);
+
+            if(querySnapshot.empty) {
+                listEl.innerHTML = `<p class="text-xs text-gray-400">No pending UTR verifications found.</p>`;
+                return;
+            }
+
+            querySnapshot.forEach(async (paymentDoc) => {
+                const pData = paymentDoc.data();
+                
+                // Fetch client details
+                const clientSnap = await getDocs(query(collection(db, "clients"), where("email", "==", pData.email)));
+                let clientName = pData.email;
+                let planName = "Standard";
+                if(!clientSnap.empty) {
+                    clientName = clientSnap.docs[0].data().name;
+                    planName = clientSnap.docs[0].data().planName;
+                }
+
+                const card = document.createElement('div');
+                card.className = "bg-gray-800/60 p-4 rounded-xl border border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3";
+                card.innerHTML = `
+                    <div>
+                        <p class="text-sm font-bold text-white">${clientName} (${pData.email})</p>
+                        <p class="text-xs text-blue-400">Plan: ${planName}</p>
+                        <p class="text-xs font-mono text-emerald-400 mt-1">UTR: <b>${pData.utr}</b></p>
+                    </div>
+                    <button onclick="approvePayment('${paymentDoc.id}', '${pData.uid}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow transition">Approve & Activate</button>
+                `;
+                listEl.appendChild(card);
+            });
+        }
+
+        window.approvePayment = async (paymentId, clientUid) => {
+            if(!confirm("Are you sure you want to approve this UTR and activate the client's plan?")) return;
+            try {
+                // Update payment status
+                await updateDoc(doc(db, "payments", paymentId), { status: "Approved" });
+                // Update client status to Active
+                await updateDoc(doc(db, "clients", clientUid), { status: "Active" });
+                
+                alert("Plan activated successfully!");
+                loadPendingPayments();
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        }
+
+        loadPendingPayments();
+    </script>
+</body>
+</html>
