@@ -19,54 +19,59 @@
     </div>
 
     <!-- Right Side Login -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 relative">
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 relative">
         <!-- Background Pattern for mobile -->
         <div class="absolute inset-0 bg-pattern opacity-50 lg:hidden"></div>
         
-        <div class="w-full max-w-md glass p-10 rounded-3xl shadow-2xl relative z-10 border border-gray-700">
-            <div class="text-center mb-10">
-                <div class="w-16 h-16 bg-blue-600/20 border border-blue-500/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-lock text-blue-400 text-2xl"></i>
+        <div class="w-full max-w-md glass p-6 md:p-10 rounded-3xl shadow-2xl relative z-10 border border-gray-700">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="w-14 h-14 md:w-16 md:h-16 bg-blue-600/20 border border-blue-500/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-blue-400 text-xl md:text-2xl"></i>
                 </div>
-                <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-                <p class="text-gray-400 text-sm">Sign in to your client workspace</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Welcome Back</h2>
+                <p class="text-gray-400 text-xs md:text-sm">Sign in to your client workspace</p>
             </div>
             
             <button id="googleBtn" class="w-full bg-white hover:bg-gray-100 text-gray-950 font-bold py-3.5 rounded-xl flex justify-center items-center gap-3 transition text-sm shadow mb-6">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google"> Continue with Google
             </button>
 
-            <div class="flex items-center my-6"><div class="flex-grow border-t border-gray-700"></div><span class="px-4 text-gray-500 text-xs font-semibold tracking-widest uppercase">Or email</span><div class="flex-grow border-t border-gray-700"></div></div>
+            <div class="flex items-center my-6"><div class="flex-grow border-t border-gray-700"></div><span class="px-4 text-gray-500 text-[10px] md:text-xs font-semibold tracking-widest uppercase">Or email</span><div class="flex-grow border-t border-gray-700"></div></div>
 
-            <form id="authForm" class="space-y-5">
+            <form id="authForm" class="space-y-4 md:space-y-5">
                 <div>
-                    <label class="block text-gray-400 text-xs font-bold uppercase tracking-wide mb-2">Business Email</label>
+                    <label class="block text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-wide mb-2">Business Email</label>
                     <div class="relative">
                         <i class="fas fa-envelope absolute left-4 top-3.5 text-gray-500"></i>
-                        <input type="email" id="email" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition" placeholder="name@company.com" required>
+                        <!-- Admin Access Note: Use qwickdesksolutions@outlook.com here to login as Admin -->
+                        <input type="email" id="email" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition text-sm" placeholder="name@company.com" required>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-gray-400 text-xs font-bold uppercase tracking-wide mb-2">Password</label>
+                    <label class="block text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-wide mb-2">Password</label>
                     <div class="relative">
                         <i class="fas fa-key absolute left-4 top-3.5 text-gray-500"></i>
-                        <input type="password" id="password" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition" placeholder="••••••••" required>
+                        <input type="password" id="password" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition text-sm" placeholder="••••••••" required>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition text-sm mt-4">Secure Login / Create Account</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3.5 md:py-4 rounded-xl shadow-lg shadow-blue-500/30 transition text-sm mt-4">Secure Login / Create Account</button>
             </form>
         </div>
     </div>
 
     <script type="module">
         import { auth, db, provider } from './firebase-config.js';
-        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // Changed to signInWithRedirect for 100% Mobile Compatibility
+        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Admin Routing
-                if(user.email === 'qwickdesksolutions@outlook.com') { window.location.href = 'admin.html'; return; }
+                // Admin Routing: If email matches, send directly to Admin panel
+                if(user.email === 'qwickdesksolutions@outlook.com') { 
+                    window.location.href = 'admin.html'; 
+                    return; 
+                }
                 
                 const docRef = doc(db, "clients", user.uid);
                 const docSnap = await getDoc(docRef);
@@ -87,7 +92,9 @@
             }
         });
 
-        document.getElementById('googleBtn').addEventListener('click', () => signInWithPopup(auth, provider));
+        // Trigger Redirect instead of Popup for Mobile devices
+        document.getElementById('googleBtn').addEventListener('click', () => signInWithRedirect(auth, provider));
+        
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value; const password = document.getElementById('password').value;
@@ -96,4 +103,3 @@
     </script>
 </body>
 </html>
-
