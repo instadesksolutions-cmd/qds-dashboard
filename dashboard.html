@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard | QwickDeskSolutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .hidden-section { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed pb-12">
+
+    <!-- TOP NAVIGATION -->
+    <nav class="glass sticky top-0 z-50 px-4 py-4 flex justify-between items-center shadow-lg">
+        <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">QwickDesk</h1>
+        <button id="logoutBtn" class="text-xs bg-red-600/80 hover:bg-red-500 text-white px-3 py-2 rounded-lg font-bold transition">Logout</button>
+    </nav>
+
+    <div class="max-w-md mx-auto px-4 space-y-5 pt-5">
+        
+        <!-- Welcome & Wallet Card -->
+        <div class="glass p-5 rounded-2xl flex justify-between items-center border-l-4 border-emerald-500 shadow-xl">
+            <div>
+                <h3 class="text-lg font-bold text-white" id="clientName">Loading...</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Plan: <span id="clientPlan" class="text-blue-400 font-semibold">--</span></p>
+                <p class="text-xs mt-1">Status: <span id="clientStatus" class="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-500/20 text-yellow-400">Loading</span></p>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">Referral Wallet</p>
+                <p class="text-2xl font-black text-white" id="clientWallet">₹0</p>
+            </div>
+        </div>
+
+        <!-- PAYMENT SECTION (Shown if status is Pending Payment) -->
+        <div id="paymentSection" class="glass p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-blue-900/30 shadow-xl hidden-section space-y-4">
+            <h4 class="text-sm font-bold text-white uppercase tracking-wider text-center">Complete Your Payment</h4>
+            
+            <div class="text-center space-y-2">
+                <p class="text-xs text-gray-300">Scan QR or pay directly via UPI ID:</p>
+                <div class="bg-white p-3 rounded-xl inline-block shadow">
+                    <!-- Standard UPI QR Placeholder linked to shjadhav112-3@okaxis -->
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=shjadhav112-3@okaxis&pn=QwickDeskSolutions" alt="UPI QR" class="w-36 h-36 mx-auto">
+                </div>
+                <p class="text-xs font-mono text-emerald-400 font-bold bg-gray-900/80 py-1.5 px-3 rounded border border-gray-700 select-all">shjadhav112-3@okaxis</p>
+            </div>
+
+            <form id="utrForm" class="space-y-3 pt-2 border-t border-gray-700">
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1 font-semibold">Enter 12-Digit UTR / Ref Number <span class="text-red-400">*</span></label>
+                    <input type="text" id="utrInput" class="w-full px-3 py-2.5 rounded-lg bg-gray-900/80 border border-gray-700 focus:border-blue-500 outline-none text-white text-sm uppercase font-mono" placeholder="e.g. 3254xxxx1290" required>
+                </div>
+                <button type="submit" id="utrBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg shadow-lg text-sm transition">Submit UTR for Verification</button>
+            </form>
+        </div>
+
+        <!-- ACTIVE PLAN TRACKER -->
+        <div class="glass p-6 rounded-2xl shadow-xl">
+            <h4 class="text-xs font-bold uppercase text-gray-400 tracking-wider mb-4 border-b border-gray-700 pb-2">Project & Build Tracker</h4>
+            <div class="space-y-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">✓</div>
+                    <div><p class="text-sm font-semibold text-white">Order & Plan Selected</p><p class="text-xs text-gray-400">Account successfully created</p></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div id="step2Icon" class="w-6 h-6 rounded-full border border-gray-600 flex items-center justify-center text-xs">2</div>
+                    <div><p class="text-sm font-semibold text-gray-300" id="step2Text">Manual Payment Verification</p><p class="text-xs text-gray-500">Waiting for admin review</p></div>
+                </div>
+                <div class="flex items-start gap-3 opacity-50">
+                    <div class="w-6 h-6 rounded-full border border-gray-600 flex items-center justify-center text-xs">3</div>
+                    <div><p class="text-sm font-semibold text-gray-300">Portal & Domain Live</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPPORT SECTION -->
+        <div class="glass p-5 rounded-2xl text-center space-y-2">
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Need Immediate Help?</h4>
+            <div class="flex justify-center gap-4 pt-1">
+                <a href="mailto:qwickdesksolutions@outlook.com" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg border border-gray-700 text-blue-400 font-semibold transition">📧 Email Support</a>
+                <a href="https://wa.me/919920048859" target="_blank" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 px-3 py-2 rounded-lg border border-emerald-500/50 text-emerald-400 font-semibold transition">💬 WhatsApp Support</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateData, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJT5XK0BcMt3uoJENxDqjvl1xf04K1XDM",
+            authDomain: "qwickdesksolutions.firebaseapp.com",
+            projectId: "qwickdesksolutions",
+            storageBucket: "qwickdesksolutions.firebasestorage.app",
+            messagingSenderId: "508191640643",
+            appId: "1:508191640643:web:42576f5d75aafea9ef58f6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const docRef = doc(db, "clients", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('clientName').innerText = "Hi, " + data.name;
+                    document.getElementById('clientPlan').innerText = data.planName + " (₹" + data.planAmount + ")";
+                    document.getElementById('clientWallet').innerText = "₹" + (data.wallet || 0);
+                    
+                    const statusEl = document.getElementById('clientStatus');
+                    statusEl.innerText = data.status;
+
+                    if (data.status === "Pending Payment") {
+                        document.getElementById('paymentSection').classList.remove('hidden-section');
+                        statusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-500/20 text-yellow-400";
+                    } else if (data.status === "Active") {
+                        statusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400";
+                        document.getElementById('step2Icon').className = "w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold text-white";
+                        document.getElementById('step2Text').className = "text-sm font-semibold text-white";
+                        document.getElementById('step2Text').innerText = "Payment Verified & Active";
+                    } else if (data.status === "Verification Under Review") {
+                        statusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400";
+                        document.getElementById('step2Text').innerText = "UTR Submitted (Review in progress)";
+                    }
+                }
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        // Handle UTR Submission with Duplicate Check
+        document.getElementById('utrForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const utr = document.getElementById('utrInput').value.trim().toUpperCase();
+            if(!utr || utr.length < 8) {
+                alert("Please enter a valid UTR / Reference number.");
+                return;
+            }
+
+            const btn = document.getElementById('utrBtn');
+            btn.innerText = "Checking UTR...";
+
+            // Check if UTR already exists in Firestore payments collection
+            const q = query(collection(db, "payments"), where("utr", "==", utr));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                alert("Error: This UTR has already been submitted by another client or used before. Duplicate UTRs are not allowed.");
+                btn.innerText = "Submit UTR for Verification";
+                return;
+            }
+
+            // Save payment record and update client status
+            try {
+                await addDoc(collection(db, "payments"), {
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    utr: utr,
+                    status: "Pending",
+                    timestamp: new Date().toISOString()
+                });
+
+                const clientRef = doc(db, "clients", currentUser.uid);
+                await updateDoc(clientRef, {
+                    status: "Verification Under Review",
+                    lastUtr: utr
+                });
+
+                alert("UTR submitted successfully! Admin will verify and activate your plan shortly.");
+                location.reload();
+            } catch (err) {
+                alert("Submission failed: " + err.message);
+                btn.innerText = "Submit UTR for Verification";
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = "index.html");
+        });
+    </script>
+</body>
+</html>
