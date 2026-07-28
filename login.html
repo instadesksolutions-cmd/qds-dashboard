@@ -20,7 +20,6 @@
 
     <!-- Right Side Login -->
     <div class="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 relative">
-        <!-- Background Pattern for mobile -->
         <div class="absolute inset-0 bg-pattern opacity-50 lg:hidden"></div>
         
         <div class="w-full max-w-md glass p-6 md:p-10 rounded-3xl shadow-2xl relative z-10 border border-gray-700">
@@ -32,7 +31,7 @@
                 <p class="text-gray-400 text-xs md:text-sm">Sign in to your client workspace</p>
             </div>
             
-            <button id="googleBtn" class="w-full bg-white hover:bg-gray-100 text-gray-950 font-bold py-3.5 rounded-xl flex justify-center items-center gap-3 transition text-sm shadow mb-6">
+            <button id="googleBtn" type="button" class="w-full bg-white hover:bg-gray-100 text-gray-950 font-bold py-3.5 rounded-xl flex justify-center items-center gap-3 transition text-sm shadow mb-6">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google"> Continue with Google
             </button>
 
@@ -43,62 +42,99 @@
                     <label class="block text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-wide mb-2">Business Email</label>
                     <div class="relative">
                         <i class="fas fa-envelope absolute left-4 top-3.5 text-gray-500"></i>
-                        <!-- Admin Access Note: Use qwickdesksolutions@outlook.com here to login as Admin -->
                         <input type="email" id="email" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition text-sm" placeholder="name@company.com" required>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-wide mb-2">Password</label>
+                    <label class="block text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-wide mb-2">Password (Min 6 chars)</label>
                     <div class="relative">
                         <i class="fas fa-key absolute left-4 top-3.5 text-gray-500"></i>
-                        <input type="password" id="password" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition text-sm" placeholder="••••••••" required>
+                        <input type="password" id="password" minlength="6" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700 focus:border-blue-500 focus:bg-gray-900 focus:ring-1 focus:ring-blue-500 outline-none text-white transition text-sm" placeholder="••••••••" required>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3.5 md:py-4 rounded-xl shadow-lg shadow-blue-500/30 transition text-sm mt-4">Secure Login / Create Account</button>
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3.5 md:py-4 rounded-xl shadow-lg shadow-blue-500/30 transition text-sm mt-4">Secure Login / Create Account</button>
             </form>
         </div>
     </div>
 
     <script type="module">
         import { auth, db, provider } from './firebase-config.js';
-        // Changed to signInWithRedirect for 100% Mobile Compatibility
-        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Handle Google Redirect Result
+        getRedirectResult(auth).catch((error) => {
+            alert("Google Login Failed: " + error.message);
+        });
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Admin Routing: If email matches, send directly to Admin panel
-                if(user.email === 'qwickdesksolutions@outlook.com') { 
-                    window.location.href = 'admin.html'; 
-                    return; 
-                }
+                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Dashboard...';
                 
-                const docRef = doc(db, "clients", user.uid);
-                const docSnap = await getDoc(docRef);
-                const pendingPlan = localStorage.getItem('selectedPlan');
-                const pendingAmount = localStorage.getItem('selectedAmount');
-                
-                if (!docSnap.exists() || docSnap.data().status === 'Basic') {
-                    if (pendingPlan) {
-                        await setDoc(docRef, { email: user.email, name: user.displayName || 'Client', planName: pendingPlan, planAmount: pendingAmount, status: "Pending Payment", createdAt: new Date().toISOString() }, { merge: true });
-                        localStorage.removeItem('selectedPlan');
-                        window.location.href = 'payment.html';
-                    } else if (docSnap.exists() && docSnap.data().status !== 'Basic') { window.location.href = 'dashboard.html'; }
-                    else { await setDoc(docRef, { email: user.email, status: "Basic", createdAt: new Date().toISOString() }, { merge: true }); window.location.href = 'dashboard.html'; }
-                } else {
-                    if(docSnap.data().status === 'Pending Payment') window.location.href = 'payment.html';
-                    else window.location.href = 'dashboard.html';
+                try {
+                    // EXACT ADMIN EMAIL MATCH (Check spelling carefully)
+                    if(user.email === 'qwickdesksolutions@outlook.com') { 
+                        window.location.href = 'admin.html'; 
+                        return; 
+                    }
+                    
+                    const docRef = doc(db, "clients", user.uid);
+                    const docSnap = await getDoc(docRef);
+                    const pendingPlan = localStorage.getItem('selectedPlan');
+                    const pendingAmount = localStorage.getItem('selectedAmount');
+                    
+                    if (!docSnap.exists()) {
+                        if (pendingPlan) {
+                            await setDoc(docRef, { email: user.email, name: user.displayName || 'Client', planName: pendingPlan, planAmount: pendingAmount, status: "Pending Payment", createdAt: new Date().toISOString() });
+                            localStorage.removeItem('selectedPlan');
+                            window.location.href = 'payment.html';
+                        } else { 
+                            await setDoc(docRef, { email: user.email, status: "Basic", createdAt: new Date().toISOString() }); 
+                            window.location.href = 'dashboard.html'; 
+                        }
+                    } else {
+                        if(docSnap.data().status === 'Pending Payment') window.location.href = 'payment.html';
+                        else window.location.href = 'dashboard.html';
+                    }
+                } catch (error) {
+                    alert("Database Error: " + error.message + "\n\n(Bhai Firebase console mein jake 'Firestore Database' create par click karna zaroori hai!)");
+                    document.getElementById('submitBtn').innerHTML = 'Secure Login / Create Account';
                 }
             }
         });
 
-        // Trigger Redirect instead of Popup for Mobile devices
-        document.getElementById('googleBtn').addEventListener('click', () => signInWithRedirect(auth, provider));
+        // Google Login Trigger
+        document.getElementById('googleBtn').addEventListener('click', () => {
+            document.getElementById('googleBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting to Google...';
+            signInWithRedirect(auth, provider);
+        });
         
+        // Email/Password Login Trigger
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value; const password = document.getElementById('password').value;
-            try { await signInWithEmailAndPassword(auth, email, password); } catch { await createUserWithEmailAndPassword(auth, email, password); }
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking Credentials...';
+            
+            const email = document.getElementById('email').value; 
+            const password = document.getElementById('password').value;
+            
+            try { 
+                await signInWithEmailAndPassword(auth, email, password); 
+            } catch (error) { 
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    try { 
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating New Account...';
+                        await createUserWithEmailAndPassword(auth, email, password); 
+                    } catch (err2) { 
+                        alert("Signup Error: " + err2.message); 
+                        btn.innerHTML = originalText;
+                    }
+                } else {
+                    alert("Login Error: " + error.message);
+                    btn.innerHTML = originalText;
+                }
+            }
         });
     </script>
 </body>
