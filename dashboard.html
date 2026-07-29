@@ -40,11 +40,13 @@
                     <p class="text-gray-400 text-sm">Track your website build status here.</p>
                 </div>
                 
+                <!-- Premium Button (HIDDEN BY DEFAULT, SHOWS ONLY IF APPROVED) -->
                 <a href="premium.html" id="goToPremiumBtn" class="hidden bg-gradient-to-r from-purple-600 to-blue-500 text-white w-full md:w-auto text-center px-6 py-3 rounded-xl font-bold shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:scale-105 transition">
                     <i class="fas fa-crown text-yellow-400 mr-2"></i> Premium Panel
                 </a>
                 
-                <a href="checkout.html" id="upgradeBtn" class="hidden bg-gradient-to-r from-yellow-500 to-yellow-400 text-black w-full md:w-auto text-center px-6 py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition">
+                <!-- Select Plan Button (VISIBLE BY DEFAULT NOW) -->
+                <a href="checkout.html" id="upgradeBtn" class="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black w-full md:w-auto text-center px-6 py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition">
                     <i class="fas fa-arrow-up mr-2"></i> Select Plan
                 </a>
             </div>
@@ -53,14 +55,15 @@
                 <div class="glass p-6 rounded-2xl border border-gray-700/50">
                     <p class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Account Status</p>
                     <p class="text-2xl font-bold text-white mb-2" id="dashPlan">Basic Profile</p>
-                    <div><span id="dashStatus" class="bg-gray-800 border border-gray-600 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">Fetching...</span></div>
+                    <div><span id="dashStatus" class="bg-gray-800 border border-gray-600 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">New Account</span></div>
                 </div>
                 
+                <!-- ONLY ONE DIRECT LINE NUMBER HERE -->
                 <div class="glass p-6 rounded-2xl border border-blue-500/30 bg-blue-900/10 flex flex-col justify-center">
                     <p class="text-sm text-blue-400/80 font-semibold uppercase tracking-wider mb-2">Support Direct Line</p>
-                    <div class="flex flex-col gap-2 mt-2">
-                        <a href="https://wa.me/919920048859" target="_blank" class="text-sm font-bold text-green-400 hover:text-green-300"><i class="fab fa-whatsapp text-lg mr-2"></i> +91 9920048859</a>
-                        <a href="tel:9529003453" class="text-sm font-bold text-blue-400 hover:text-blue-300"><i class="fas fa-phone-alt text-lg mr-2"></i> +91 9529003453</a>
+                    <div class="flex flex-col gap-3 mt-2">
+                        <a href="https://wa.me/919920048859" target="_blank" class="text-sm font-bold text-green-400 hover:text-green-300 flex items-center"><i class="fab fa-whatsapp text-xl w-8"></i> Chat on WhatsApp</a>
+                        <a href="tel:9920048859" class="text-sm font-bold text-blue-400 hover:text-blue-300 flex items-center"><i class="fas fa-phone-alt text-lg w-8"></i> Call: +91 9920048859</a>
                     </div>
                 </div>
             </div>
@@ -99,9 +102,9 @@
                     const statusBadge = document.getElementById('dashStatus');
                     statusBadge.innerText = data.status || 'Basic';
                     
-                    if (data.status === 'Basic' || !data.status) {
-                        document.getElementById('upgradeBtn').classList.remove('hidden');
-                    } else if (data.status === 'Pending Verification') {
+                    if (data.status === 'Pending Verification') {
+                        // Hide select plan, show pending
+                        document.getElementById('upgradeBtn').classList.add('hidden');
                         statusBadge.className = "bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold animate-pulse";
                         document.getElementById('step2Title').className = "font-bold text-yellow-400 text-lg";
                         document.getElementById('step2Title').innerText = "Verifying UTR...";
@@ -109,25 +112,28 @@
                         document.getElementById('step2Icon').className = "absolute -left-10 w-8 h-8 rounded-full bg-yellow-500 border-4 border-gray-950 flex items-center justify-center z-10";
                         document.getElementById('step2Icon').innerHTML = '<i class="fas fa-spinner fa-spin text-gray-950 text-xs"></i>';
                     } else if (data.status === 'Active') {
+                        // Hide select plan, show Premium button
+                        document.getElementById('upgradeBtn').classList.add('hidden');
+                        document.getElementById('goToPremiumBtn').classList.remove('hidden');
                         statusBadge.className = "bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold";
                         document.getElementById('step2Title').className = "font-bold text-white text-lg";
                         document.getElementById('step2Title').innerText = "Payment Verified";
                         document.getElementById('step2Text').innerText = "Fund securely received.";
                         document.getElementById('step2Icon').className = "absolute -left-10 w-8 h-8 rounded-full bg-emerald-500 border-4 border-gray-950 flex items-center justify-center z-10";
                         document.getElementById('step2Icon').innerHTML = '<i class="fas fa-check text-gray-950 text-xs"></i>';
-                        document.getElementById('goToPremiumBtn').classList.remove('hidden');
                     } else if (data.status === 'Declined') {
+                        // Show select plan button so they can re-enter payment
                         statusBadge.className = "bg-red-500/20 border border-red-500/50 text-red-400 px-3 py-1 rounded-full text-xs font-bold";
                         document.getElementById('step2Title').className = "font-bold text-red-400 text-lg";
                         document.getElementById('step2Title').innerText = "Payment Declined";
-                        document.getElementById('step2Text').innerText = "Please verify your UTR and submit again via the 'Select Plan' button.";
-                        document.getElementById('upgradeBtn').classList.remove('hidden');
+                        document.getElementById('step2Text').innerText = "Please verify your UTR and submit again.";
                         document.getElementById('upgradeBtn').innerHTML = '<i class="fas fa-sync-alt mr-2"></i> Resubmit Payment';
                     }
                 }
             } else { window.location.href = 'login.html'; }
         });
 
+        // Logout hamesha index.html (Home Page) par hi bhejta hai taaki account secure rahe.
         const logout = () => signOut(auth).then(() => window.location.href='index.html');
         document.getElementById('logoutBtnDesk').addEventListener('click', logout);
         if(document.getElementById('logoutBtnMob')) document.getElementById('logoutBtnMob').addEventListener('click', logout);
