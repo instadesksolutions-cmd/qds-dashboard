@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Plan | QwickDeskSolutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-950 text-white min-h-screen relative pb-20">
+    
+    <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/10 rounded-full blur-3xl z-0 pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto px-4 py-8 md:py-12 relative z-10">
+        
+        <a href="dashboard.html" class="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+
+        <div class="text-center mb-10 md:mb-16">
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-4">SIMPLE PRICING.<br class="md:hidden"> <span class="text-gradient-gold">POWERFUL WEBSITES.</span></h1>
+            <p class="text-gray-400 text-sm md:text-base">Affordable packages for every local business to grow online.</p>
+        </div>
+
+        <!-- PRICING CHART -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16">
+            
+            <!-- STARTER -->
+            <div class="glass p-6 md:p-8 rounded-3xl border-t-4 border-blue-500 flex flex-col hover:scale-105 transition duration-300">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-blue-400">STARTER</h2>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-4">Perfect for Small Start</p>
+                    <div class="text-4xl md:text-5xl font-extrabold text-white">₹699</div>
+                    <p class="text-sm text-gray-400 mt-2">1 Page Landing Site</p>
+                </div>
+                <div class="space-y-4 text-xs md:text-sm flex-grow mb-8">
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Mobile Friendly</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> WhatsApp Button</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Basic Speed Setup</p>
+                    <p class="flex items-center gap-3 text-gray-600"><i class="fas fa-times-circle text-red-500/30 text-lg"></i> Google Maps Setup</p>
+                    <p class="flex items-center gap-3 text-gray-600"><i class="fas fa-times-circle text-red-500/30 text-lg"></i> GMB SEO (1 Month)</p>
+                </div>
+                <button onclick="selectPlan('Starter', 699)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">Select Starter</button>
+            </div>
+
+            <!-- GROWTH -->
+            <div class="glass bg-gray-900/80 p-6 md:p-8 rounded-3xl border-2 border-yellow-500 flex flex-col transform md:-translate-y-4 shadow-[0_0_30px_rgba(234,179,8,0.15)] relative">
+                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold uppercase tracking-widest py-1 px-4 rounded-full whitespace-nowrap">Most Popular</div>
+                <div class="text-center mb-6 mt-2">
+                    <h2 class="text-2xl font-bold text-yellow-400">GROWTH</h2>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-4">Best for Growing Business</p>
+                    <div class="text-4xl md:text-5xl font-extrabold text-white">₹999</div>
+                    <p class="text-sm text-gray-400 mt-2">Up to 7 Pages</p>
+                </div>
+                <div class="space-y-4 text-xs md:text-sm flex-grow mb-8">
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Mobile Friendly</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> WhatsApp Button</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Google Maps Setup</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Premium Graphic UI</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Local SEO Tags Setup</p>
+                    <p class="flex items-center gap-3 text-gray-300 bg-yellow-500/10 p-2 rounded-lg border border-yellow-500/20"><i class="fas fa-star text-yellow-500 text-lg"></i> GMB SEO (1 Month)</p>
+                </div>
+                <button onclick="selectPlan('Growth', 999)" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-black hover:scale-105 font-bold py-3 rounded-xl transition shadow-lg">Select Growth</button>
+            </div>
+
+            <!-- PRO -->
+            <div class="glass p-6 md:p-8 rounded-3xl border-t-4 border-purple-500 flex flex-col hover:scale-105 transition duration-300">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-purple-400">PRO</h2>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-4">Premium Maximum Growth</p>
+                    <div class="text-4xl md:text-5xl font-extrabold text-white">₹1,499</div>
+                    <p class="text-sm text-gray-400 mt-2">Multi-Page (Custom)</p>
+                </div>
+                <div class="space-y-4 text-xs md:text-sm flex-grow mb-8">
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> All Growth Features</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Glassmorphism FX</p>
+                    <p class="flex items-center gap-3 text-gray-300"><i class="fas fa-check-circle text-emerald-500 text-lg"></i> Priority Delivery</p>
+                    <p class="flex items-center gap-3 text-gray-300 bg-purple-500/10 p-2 rounded-lg border border-purple-500/20"><i class="fas fa-star text-purple-400 text-lg"></i> GMB SEO (1 Month)</p>
+                    <p class="flex items-center gap-3 text-gray-300 bg-purple-500/10 p-2 rounded-lg border border-purple-500/20"><i class="fas fa-tools text-purple-400 text-lg"></i> Web Maintenance</p>
+                </div>
+                <button onclick="selectPlan('Pro', 1499)" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition">Select Pro</button>
+            </div>
+        </div>
+
+        <!-- PAYMENT SECTION -->
+        <div id="paymentSection" class="hidden max-w-lg mx-auto glass p-6 md:p-8 rounded-3xl border border-gray-700 shadow-2xl mt-12">
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-white mb-2">Secure Checkout</h3>
+                <p class="text-emerald-400 text-sm font-semibold"><i class="fas fa-lock mr-1"></i> 256-bit Encrypted</p>
+            </div>
+
+            <div class="bg-gray-900/80 p-5 rounded-2xl mb-6 border border-gray-700 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Selected Plan</p>
+                    <p class="text-lg font-bold text-white" id="selectedPlanName">Growth Package</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Due</p>
+                    <p class="text-2xl font-bold text-emerald-400" id="selectedPlanAmount">₹999</p>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl mb-6 flex flex-col items-center justify-center relative">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=shjadhav112-3@okaxis&pn=QwickDeskSolutions&cu=INR" alt="QR Code" class="w-36 h-36 md:w-40 md:h-40 border-4 border-white shadow-lg rounded-xl mb-3">
+                <p class="text-gray-600 text-xs md:text-sm font-bold text-center">Scan with GPay, PhonePe or Paytm</p>
+            </div>
+
+            <div class="flex justify-between items-center bg-gray-900 p-4 rounded-xl mb-8 border border-gray-700">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <i class="fas fa-building text-gray-400"></i>
+                    <span class="text-xs md:text-sm font-mono text-gray-200 truncate" id="upiId">shjadhav112-3@okaxis</span>
+                </div>
+                <button onclick="copyUPI()" class="text-blue-400 hover:text-white transition flex items-center gap-2 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/30 text-xs font-bold whitespace-nowrap ml-2">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+
+            <form id="paymentForm" class="space-y-5">
+                <div>
+                    <label class="block text-gray-300 text-sm font-bold mb-2">Payment Reference (UTR)</label>
+                    <div class="relative">
+                        <i class="fas fa-hashtag absolute left-4 top-4 text-gray-500"></i>
+                        <input type="text" id="utr" class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-gray-900/80 border border-gray-600 focus:border-emerald-500 outline-none text-white font-mono transition text-sm md:text-base" placeholder="12-digit UTR No." required>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-base md:text-lg">
+                    Submit Payment <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+            
+            <div id="successMsg" class="hidden mt-6 p-4 bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-sm rounded-xl text-center flex items-center justify-center gap-3">
+                <i class="fas fa-check-circle text-2xl"></i>
+                <div class="text-left">
+                    <p class="font-bold">Verification Submitted!</p>
+                    <p class="text-xs opacity-80">Redirecting...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+        let finalPlanName = '';
+        let finalPlanAmount = 0;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) currentUser = user;
+            else window.location.href = 'login.html';
+        });
+
+        window.selectPlan = (name, amount) => {
+            finalPlanName = name;
+            finalPlanAmount = amount;
+            document.getElementById('selectedPlanName').innerText = name + ' Package';
+            document.getElementById('selectedPlanAmount').innerText = '₹' + amount;
+            const paymentSection = document.getElementById('paymentSection');
+            paymentSection.classList.remove('hidden');
+            paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        window.copyUPI = () => {
+            navigator.clipboard.writeText('shjadhav112-3@okaxis');
+            alert('UPI ID Copied!');
+        };
+
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+            
+            const utr = document.getElementById('utr').value;
+            if(currentUser) {
+                await updateDoc(doc(db, "clients", currentUser.uid), { 
+                    planName: finalPlanName,
+                    planAmount: finalPlanAmount,
+                    utr: utr, 
+                    status: "Pending Verification" 
+                });
+                document.getElementById('paymentForm').classList.add('hidden');
+                document.getElementById('successMsg').classList.remove('hidden');
+                setTimeout(() => window.location.href = 'dashboard.html', 2000);
+            }
+        });
+    </script>
+</body>
+</html>
+
