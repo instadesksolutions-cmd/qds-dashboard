@@ -136,14 +136,16 @@
         </div>
     </div>
 
+    <!-- UPDATED SCRIPT HERE -->
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // updateDoc ki jagah setDoc import kiya hai
+        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let currentUser = null;
-        let finalPlanName = '';
-        let finalPlanAmount = 0;
+        let finalPlanName = 'Growth'; // Default laga diya
+        let finalPlanAmount = 999;    // Default laga diya
 
         onAuthStateChanged(auth, async (user) => {
             if (user) currentUser = user;
@@ -172,19 +174,35 @@
             btn.disabled = true;
             
             const utr = document.getElementById('utr').value;
+            
             if(currentUser) {
-                await updateDoc(doc(db, "clients", currentUser.uid), { 
-                    planName: finalPlanName,
-                    planAmount: finalPlanAmount,
-                    utr: utr, 
-                    status: "Pending Verification" 
-                });
-                document.getElementById('paymentForm').classList.add('hidden');
-                document.getElementById('successMsg').classList.remove('hidden');
-                setTimeout(() => window.location.href = 'dashboard.html', 2000);
+                try {
+                    // setDoc use kiya with merge:true (Ye naya data add kar dega bina error ke)
+                    await setDoc(doc(db, "clients", currentUser.uid), { 
+                        planName: finalPlanName,
+                        planAmount: finalPlanAmount,
+                        utr: utr, 
+                        status: "Pending Verification" 
+                    }, { merge: true });
+                    
+                    document.getElementById('paymentForm').classList.add('hidden');
+                    document.getElementById('successMsg').classList.remove('hidden');
+                    
+                    setTimeout(() => window.location.href = 'dashboard.html', 2000);
+                } catch (error) {
+                    // Agar ab error aayi toh console aur popup dono mein dikhegi
+                    console.error("Firebase Error: ", error);
+                    alert("Error: Data save nahi ho raha! Apne Firebase Firestore Rules check karo.\n\n" + error.message);
+                    
+                    // Error aane par button wapas theek ho jayega taaki hang na ho
+                    btn.innerHTML = 'Submit Payment <i class="fas fa-arrow-right ml-2"></i>';
+                    btn.disabled = false;
+                }
+            } else {
+                alert("Login session expire ho gaya hai. Wapas login karo!");
+                window.location.href = 'login.html';
             }
         });
     </script>
 </body>
 </html>
-
