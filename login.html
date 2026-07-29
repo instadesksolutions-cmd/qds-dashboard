@@ -7,64 +7,145 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-pattern flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-950 text-white min-h-screen flex items-center justify-center relative overflow-hidden bg-pattern p-4">
     
-    <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- Background Blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-72 h-72 md:w-96 md:h-96 bg-blue-600/30 rounded-full blur-[100px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-72 h-72 md:w-96 md:h-96 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
 
     <div class="glass p-8 md:p-10 rounded-3xl w-full max-w-md relative z-10 shadow-2xl border border-gray-800">
         <div class="text-center mb-8">
             <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4">
                 <i class="fas fa-lock text-white text-2xl"></i>
             </div>
-            <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Welcome Back</h2>
             <p class="text-gray-400 text-sm">Sign in to your client workspace</p>
         </div>
 
-        <button id="googleLogin" class="w-full bg-white hover:bg-gray-100 text-black font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 transition shadow-lg mb-6">
+        <!-- 1. EMAIL & PASSWORD LOGIN FORM -->
+        <form id="emailLoginForm" class="space-y-4 mb-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-1">Email Address</label>
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-4 top-3.5 text-gray-500 text-sm"></i>
+                    <!-- Default Email Set Here -->
+                    <input type="email" id="email" value="qwickdesksolutions@outlook.com" class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700 rounded-xl focus:border-blue-500 outline-none transition text-white text-sm" placeholder="Enter your email" required>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-1">Password</label>
+                <div class="relative">
+                    <i class="fas fa-key absolute left-4 top-3.5 text-gray-500 text-sm"></i>
+                    <!-- Default Password Set Here -->
+                    <input type="password" id="password" value="Admin@2026" class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700 rounded-xl focus:border-blue-500 outline-none transition text-white text-sm" placeholder="••••••••" required>
+                </div>
+            </div>
+            <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/30 text-sm">
+                Secure Login
+            </button>
+        </form>
+
+        <!-- DIVIDER -->
+        <div class="flex items-center my-6">
+            <div class="flex-grow border-t border-gray-700"></div>
+            <span class="px-4 text-xs text-gray-500 font-semibold tracking-wider">OR</span>
+            <div class="flex-grow border-t border-gray-700"></div>
+        </div>
+
+        <!-- 2. GOOGLE (GMAIL) LOGIN BUTTON -->
+        <button id="googleLogin" type="button" class="w-full bg-white hover:bg-gray-200 text-black font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3 transition shadow-lg text-sm">
             <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="w-5 h-5" alt="Google">
             Continue with Google
         </button>
 
-        <div class="flex items-center my-6">
-            <div class="flex-grow border-t border-gray-700"></div>
-            <span class="px-4 text-xs text-gray-500 font-semibold tracking-wider">SECURE PORTAL</span>
-            <div class="flex-grow border-t border-gray-700"></div>
-        </div>
-
-        <p class="text-center text-xs text-gray-500 mt-6">By signing in, you agree to our Terms of Service & Privacy Policy.</p>
+        <p class="text-center text-xs text-gray-500 mt-8">By signing in, you agree to our Terms & Privacy Policy.</p>
     </div>
 
+    <!-- SCRIPT SECTION -->
     <script type="module">
         import { auth, db } from './firebase-config.js';
-        import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const ADMIN_EMAIL = 'qwickdesksolutions@outlook.com';
 
+        // 1. AUTO-REDIRECT LOGIC (Check if already logged in)
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                if (user.email === ADMIN_EMAIL) window.location.href = 'admin.html';
-                else window.location.href = 'dashboard.html';
+                if (user.email === ADMIN_EMAIL) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             }
         });
 
+        // 2. EMAIL & PASSWORD LOGIN FUNCTION
+        document.getElementById('emailLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            btn.disabled = true;
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const result = await signInWithEmailAndPassword(auth, email, password);
+                const user = result.user;
+                
+                // Naye Email/Password user ka database record banana (Agar admin nahi hai)
+                if (user.email !== ADMIN_EMAIL) {
+                    const userRef = doc(db, "clients", user.uid);
+                    const docSnap = await getDoc(userRef);
+                    if (!docSnap.exists()) {
+                        await setDoc(userRef, {
+                            name: "Client",
+                            email: user.email,
+                            status: "Basic",
+                            createdAt: new Date()
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Login Failed: " + error.message);
+                btn.innerHTML = 'Secure Login';
+                btn.disabled = false;
+            }
+        });
+
+        // 3. GOOGLE POPUP LOGIN FUNCTION
         document.getElementById('googleLogin').addEventListener('click', async () => {
+            const btn = document.getElementById('googleLogin');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
+            btn.disabled = true;
+
             const provider = new GoogleAuthProvider();
             try {
                 const result = await signInWithPopup(auth, provider);
                 const user = result.user;
-                const userRef = doc(db, "clients", user.uid);
-                const docSnap = await getDoc(userRef);
                 
-                if (!docSnap.exists() && user.email !== ADMIN_EMAIL) {
-                    await setDoc(userRef, {
-                        name: user.displayName,
-                        email: user.email,
-                        status: "Basic",
-                        createdAt: new Date()
-                    });
+                // Google user ka database record banana
+                if (user.email !== ADMIN_EMAIL) {
+                    const userRef = doc(db, "clients", user.uid);
+                    const docSnap = await getDoc(userRef);
+                    
+                    if (!docSnap.exists()) {
+                        await setDoc(userRef, {
+                            name: user.displayName || "Client",
+                            email: user.email,
+                            status: "Basic",
+                            createdAt: new Date()
+                        });
+                    }
                 }
-            } catch (error) { alert("Login Failed: " + error.message); }
+            } catch (error) { 
+                console.error(error);
+                alert("Google Login Failed: " + error.message); 
+                btn.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="w-5 h-5"> Continue with Google';
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
