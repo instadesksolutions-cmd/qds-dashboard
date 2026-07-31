@@ -24,7 +24,6 @@
 <body class="bg-gray-950 text-white min-h-screen crm-bg p-4 md:p-8 font-sans">
     <div class="max-w-[90rem] mx-auto space-y-8">
         
-        <!-- Header -->
         <header class="glass-card p-5 md:p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center shadow-2xl gap-4">
             <div class="flex items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-tr from-red-600 to-rose-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30 shrink-0">
@@ -43,7 +42,6 @@
             </button>
         </header>
 
-        <!-- Client Requests Section -->
         <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
             <div class="p-5 md:p-6 border-b border-gray-800 bg-gray-900/50 flex justify-between items-center">
                 <h2 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
@@ -63,13 +61,12 @@
                         </tr>
                     </thead>
                     <tbody id="requestsTableBody" class="divide-y divide-gray-800">
-                        <tr><td colspan="5" class="text-center py-6 text-gray-500">Loading requests...</td></tr>
+                        <tr><td colspan="5" class="text-center py-6 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Loading requests...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Main Client Database Section -->
         <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
             <div class="p-5 md:p-6 border-b border-gray-800 bg-gray-900/50 flex justify-between items-center">
                 <h2 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
@@ -90,25 +87,26 @@
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-gray-800">
-                        <!-- Data injected via JS -->
+                        <tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Fetching client records...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Logic -->
+    <!-- Firebase Logic with Error Handling -->
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const ADMIN_EMAIL = 'qwickdesksolutions@outlook.com';
+        // IMPORTANT: Agar aap kisi aur email se admin chalana chahte ho, toh yahan email change kar dena.
+        const ADMIN_EMAIL = 'qwickdesksolutions@outlook.com'; 
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 if (user.email !== ADMIN_EMAIL) {
-                    alert("Unauthorized Access: Super Admin credentials required.");
+                    alert(`Unauthorized Access. Login as ${ADMIN_EMAIL} required.`);
                     window.location.href = 'index.html';
                     return;
                 }
@@ -119,141 +117,148 @@
             }
         });
 
-        // Load Client Database
         window.loadClients = async () => {
             const tbody = document.getElementById('clientTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Fetching client records...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-blue-400"><i class="fas fa-spinner fa-spin mr-2"></i> Connecting to Firebase...</td></tr>';
             
-            const querySnapshot = await getDocs(collection(db, "clients"));
-            let html = '';
-            
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const uid = docSnap.id;
+            try {
+                const querySnapshot = await getDocs(collection(db, "clients"));
                 
-                // Payment Status Badge
-                let statusBadge = '';
-                if(data.status === 'Active') statusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Active</span>';
-                else if (data.status === 'Pending Verification') statusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse">Pending</span>';
-                else if (data.status === 'Declined') statusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Declined</span>';
-                else statusBadge = '<span class="px-3 py-1 bg-gray-700/50 text-gray-400 border border-gray-600 rounded-full text-xs font-bold">Basic</span>';
-
-                // Payment Approve/Decline Buttons
-                let paymentAction = '';
-                if(data.status === 'Pending Verification') {
-                    paymentAction = `
-                    <div class="flex gap-2 justify-end">
-                        <button onclick="approveClient('${uid}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-check mr-1"></i> Approve</button>
-                        <button onclick="declineClient('${uid}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-times"></i></button>
-                    </div>`;
-                } else {
-                    paymentAction = `<span class="text-gray-500 text-xs font-bold uppercase tracking-wider"><i class="fas fa-check-circle text-emerald-500 mr-1"></i> Verified</span>`;
+                // Agar database khali hai toh
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-folder-open text-2xl mb-2 block"></i> No clients found in the database.</td></tr>';
+                    return;
                 }
 
-                html += `
-                <tr class="hover:bg-gray-900/40 transition">
-                    <td class="px-6 py-4">
-                        <p class="font-bold text-white text-sm">${data.name || 'Client User'}</p>
-                        <p class="text-xs text-gray-400">${data.email}</p>
-                    </td>
-                    <td class="px-6 py-4">
-                        <p class="font-bold text-gray-300 text-sm">${data.planName || 'Standard'} (₹${data.planAmount || '0'})</p>
-                        <p class="font-mono text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/25 inline-block mt-1">UTR: ${data.utr || 'N/A'}</p>
-                    </td>
-                    <td class="px-6 py-4">${statusBadge}</td>
+                let html = '';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const uid = docSnap.id;
                     
-                    <!-- Website URL & GMB Fields -->
-                    <td class="px-6 py-4 space-y-2 min-w-[250px]">
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="web_${uid}" value="${data.websiteUrl || ''}" placeholder="https://clientdomain.com" class="bg-gray-900 border border-gray-700 rounded-lg px-2.5 py-1 text-xs text-white w-full focus:outline-none focus:border-purple-500">
-                        </div>
-                        <div class="flex gap-2">
-                            <input type="text" id="srch_${uid}" value="${data.gmbSearches || ''}" placeholder="GMB Searches" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white w-1/2">
-                            <input type="text" id="view_${uid}" value="${data.gmbViews || ''}" placeholder="GMB Views" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white w-1/2">
-                            <button onclick="saveClientData('${uid}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-lg text-xs font-bold transition shadow-lg shadow-purple-600/20"><i class="fas fa-save"></i></button>
-                        </div>
-                    </td>
+                    let statusBadge = '';
+                    if(data.status === 'Active') statusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Active</span>';
+                    else if (data.status === 'Pending Verification') statusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse">Pending</span>';
+                    else if (data.status === 'Declined') statusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Declined</span>';
+                    else statusBadge = '<span class="px-3 py-1 bg-gray-700/50 text-gray-400 border border-gray-600 rounded-full text-xs font-bold">Basic</span>';
 
-                    <!-- Live 5-Step Tracker Dropdowns -->
-                    <td class="px-6 py-4 min-w-[400px]">
-                        <div class="grid grid-cols-2 gap-2">
-                            <select id="s1_${uid}" onchange="updateStep('${uid}', 1)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
-                                <option value="pending" ${data.step1==='pending'?'selected':''}>1: GMB Pending</option>
-                                <option value="in-progress" ${data.step1==='in-progress'?'selected':''}>1: GMB In Progress</option>
-                                <option value="completed" ${data.step1==='completed'?'selected':''}>1: GMB Completed</option>
-                            </select>
-                            <select id="s2_${uid}" onchange="updateStep('${uid}', 2)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
-                                <option value="pending" ${data.step2==='pending'?'selected':''}>2: Design Pending</option>
-                                <option value="in-progress" ${data.step2==='in-progress'?'selected':''}>2: Design In Progress</option>
-                                <option value="completed" ${data.step2==='completed'?'selected':''}>2: Design Completed</option>
-                            </select>
-                            <select id="s3_${uid}" onchange="updateStep('${uid}', 3)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
-                                <option value="pending" ${data.step3==='pending'?'selected':''}>3: Dev Pending</option>
-                                <option value="in-progress" ${data.step3==='in-progress'?'selected':''}>3: Dev In Progress</option>
-                                <option value="completed" ${data.step3==='completed'?'selected':''}>3: Dev Completed</option>
-                            </select>
-                            <select id="s4_${uid}" onchange="updateStep('${uid}', 4)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
-                                <option value="pending" ${data.step4==='pending'?'selected':''}>4: Test Pending</option>
-                                <option value="in-progress" ${data.step4==='in-progress'?'selected':''}>4: Test In Progress</option>
-                                <option value="completed" ${data.step4==='completed'?'selected':''}>4: Test Completed</option>
-                            </select>
-                            <select id="s5_${uid}" onchange="updateStep('${uid}', 5)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
-                                <option value="pending" ${data.step5==='pending'?'selected':''}>5: Live Pending</option>
-                                <option value="in-progress" ${data.step5==='in-progress'?'selected':''}>5: Live In Progress</option>
-                                <option value="completed" ${data.step5==='completed'?'selected':''}>5: Live Completed</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-right">${paymentAction}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
+                    let paymentAction = '';
+                    if(data.status === 'Pending Verification') {
+                        paymentAction = `
+                        <div class="flex gap-2 justify-end">
+                            <button onclick="approveClient('${uid}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-check mr-1"></i> Approve</button>
+                            <button onclick="declineClient('${uid}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-times"></i></button>
+                        </div>`;
+                    } else {
+                        paymentAction = `<span class="text-gray-500 text-xs font-bold uppercase tracking-wider"><i class="fas fa-check-circle text-emerald-500 mr-1"></i> Verified</span>`;
+                    }
+
+                    html += `
+                    <tr class="hover:bg-gray-900/40 transition">
+                        <td class="px-6 py-4">
+                            <p class="font-bold text-white text-sm">${data.name || 'Client User'}</p>
+                            <p class="text-xs text-gray-400">${data.email || 'No email'}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="font-bold text-gray-300 text-sm">${data.planName || 'Standard'} (₹${data.planAmount || '0'})</p>
+                            <p class="font-mono text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/25 inline-block mt-1">UTR: ${data.utr || 'N/A'}</p>
+                        </td>
+                        <td class="px-6 py-4">${statusBadge}</td>
+                        <td class="px-6 py-4 space-y-2 min-w-[250px]">
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="web_${uid}" value="${data.websiteUrl || ''}" placeholder="https://domain.com" class="bg-gray-900 border border-gray-700 rounded-lg px-2.5 py-1 text-xs text-white w-full">
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="srch_${uid}" value="${data.gmbSearches || ''}" placeholder="GMB Searches" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white w-1/2">
+                                <input type="text" id="view_${uid}" value="${data.gmbViews || ''}" placeholder="GMB Views" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white w-1/2">
+                                <button onclick="saveClientData('${uid}')" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-xs font-bold"><i class="fas fa-save"></i></button>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 min-w-[400px]">
+                            <div class="grid grid-cols-2 gap-2">
+                                <select id="s1_${uid}" onchange="updateStep('${uid}', 1)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                    <option value="pending" ${data.step1==='pending'?'selected':''}>1: GMB Pending</option>
+                                    <option value="in-progress" ${data.step1==='in-progress'?'selected':''}>1: GMB In Progress</option>
+                                    <option value="completed" ${data.step1==='completed'?'selected':''}>1: GMB Completed</option>
+                                </select>
+                                <select id="s2_${uid}" onchange="updateStep('${uid}', 2)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                    <option value="pending" ${data.step2==='pending'?'selected':''}>2: Design Pending</option>
+                                    <option value="in-progress" ${data.step2==='in-progress'?'selected':''}>2: Design In Progress</option>
+                                    <option value="completed" ${data.step2==='completed'?'selected':''}>2: Design Completed</option>
+                                </select>
+                                <select id="s3_${uid}" onchange="updateStep('${uid}', 3)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                    <option value="pending" ${data.step3==='pending'?'selected':''}>3: Dev Pending</option>
+                                    <option value="in-progress" ${data.step3==='in-progress'?'selected':''}>3: Dev In Progress</option>
+                                    <option value="completed" ${data.step3==='completed'?'selected':''}>3: Dev Completed</option>
+                                </select>
+                                <select id="s4_${uid}" onchange="updateStep('${uid}', 4)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                    <option value="pending" ${data.step4==='pending'?'selected':''}>4: Test Pending</option>
+                                    <option value="in-progress" ${data.step4==='in-progress'?'selected':''}>4: Test In Progress</option>
+                                    <option value="completed" ${data.step4==='completed'?'selected':''}>4: Test Completed</option>
+                                </select>
+                                <select id="s5_${uid}" onchange="updateStep('${uid}', 5)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                    <option value="pending" ${data.step5==='pending'?'selected':''}>5: Live Pending</option>
+                                    <option value="in-progress" ${data.step5==='in-progress'?'selected':''}>5: Live In Progress</option>
+                                    <option value="completed" ${data.step5==='completed'?'selected':''}>5: Live Completed</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">${paymentAction}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 bg-red-900/20 text-red-400 font-bold border border-red-500/30 rounded-xl"><i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>FIREBASE ERROR: ${error.message}</td></tr>`;
+            }
         };
 
-        // Load Client Requests with Accept/Reject logic
         window.loadClientRequests = async () => {
             const tbody = document.getElementById('requestsTableBody');
-            const querySnapshot = await getDocs(collection(db, "clientRequests"));
-            let html = '';
             
-            if(querySnapshot.empty) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-500">No pending requests from clients at the moment.</td></tr>';
-                return;
-            }
-
-            querySnapshot.forEach((docSnap) => {
-                const req = docSnap.data();
-                const reqId = docSnap.id;
-
-                let reqStatusBadge = '';
-                if(req.status === 'Accepted') reqStatusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Accepted</span>';
-                else if(req.status === 'Rejected') reqStatusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Rejected</span>';
-                else reqStatusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse">Pending</span>';
-
-                let reqAction = '';
-                if(!req.status || req.status === 'Pending') {
-                    reqAction = `
-                    <div class="flex gap-2 justify-end">
-                        <button onclick="acceptRequest('${reqId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-lg shadow-emerald-600/20"><i class="fas fa-check mr-1"></i> Accept</button>
-                        <button onclick="rejectRequest('${reqId}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-lg shadow-red-600/20"><i class="fas fa-times mr-1"></i> Reject</button>
-                    </div>`;
-                } else {
-                    reqAction = `<button onclick="deleteRequest('${reqId}')" class="text-gray-500 hover:text-red-400 text-xs font-bold transition"><i class="fas fa-trash mr-1"></i> Remove Log</button>`;
+            try {
+                const querySnapshot = await getDocs(collection(db, "clientRequests"));
+                
+                if(querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-500">No pending requests from clients at the moment.</td></tr>';
+                    return;
                 }
 
-                html += `
-                <tr class="hover:bg-gray-900/40 transition">
-                    <td class="px-6 py-4 font-bold text-white">${req.clientName || 'Client'}</td>
-                    <td class="px-6 py-4"><span class="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-full text-xs font-bold whitespace-nowrap">${req.type}</span></td>
-                    <td class="px-6 py-4 text-gray-300 max-w-sm truncate" title="${req.details}">${req.details}</td>
-                    <td class="px-6 py-4">${reqStatusBadge}</td>
-                    <td class="px-6 py-4 text-right">${reqAction}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
+                let html = '';
+                querySnapshot.forEach((docSnap) => {
+                    const req = docSnap.data();
+                    const reqId = docSnap.id;
+
+                    let reqStatusBadge = '';
+                    if(req.status === 'Accepted') reqStatusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Accepted</span>';
+                    else if(req.status === 'Rejected') reqStatusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Rejected</span>';
+                    else reqStatusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse">Pending</span>';
+
+                    let reqAction = '';
+                    if(!req.status || req.status === 'Pending') {
+                        reqAction = `
+                        <div class="flex gap-2 justify-end">
+                            <button onclick="acceptRequest('${reqId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-check mr-1"></i> Accept</button>
+                            <button onclick="rejectRequest('${reqId}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-times mr-1"></i> Reject</button>
+                        </div>`;
+                    } else {
+                        reqAction = `<button onclick="deleteRequest('${reqId}')" class="text-gray-500 hover:text-red-400 text-xs font-bold transition"><i class="fas fa-trash mr-1"></i> Remove Log</button>`;
+                    }
+
+                    html += `
+                    <tr class="hover:bg-gray-900/40 transition">
+                        <td class="px-6 py-4 font-bold text-white">${req.clientName || 'Client'}</td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-full text-xs font-bold whitespace-nowrap">${req.type}</span></td>
+                        <td class="px-6 py-4 text-gray-300 max-w-sm truncate" title="${req.details}">${req.details}</td>
+                        <td class="px-6 py-4">${reqStatusBadge}</td>
+                        <td class="px-6 py-4 text-right">${reqAction}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 bg-red-900/20 text-red-400 font-bold"><i class="fas fa-times-circle mr-2"></i>Error: ${error.message}</td></tr>`;
+            }
         };
 
-        // Approve / Decline Client Payment
         window.approveClient = async (uid) => {
             if(confirm("Authorize and activate Premium Plan for this client?")) {
                 await updateDoc(doc(db, "clients", uid), { status: "Active" });
@@ -268,7 +273,6 @@
             }
         };
 
-        // Accept / Reject / Delete Client Requests
         window.acceptRequest = async (reqId) => {
             await updateDoc(doc(db, "clientRequests", reqId), { status: "Accepted" });
             loadClientRequests();
@@ -286,27 +290,7 @@
             }
         };
 
-        // Save Website & GMB Stats to Firebase
         window.saveClientData = async (uid) => {
             const websiteUrl = document.getElementById(`web_${uid}`).value;
             const gmbSearches = document.getElementById(`srch_${uid}`).value;
-            const gmbViews = document.getElementById(`view_${uid}`).value;
-
-            try {
-                await updateDoc(doc(db, "clients", uid), { websiteUrl, gmbSearches, gmbViews });
-                alert("Client deployment & GMB details saved to database!");
-                loadClients();
-            } catch (err) {
-                alert("Error updating data: " + err.message);
-            }
-        };
-
-        // Live Update Individual Tracking Steps
-        window.updateStep = async (uid, stepNum) => {
-            const val = document.getElementById(`s${stepNum}_${uid}`).value;
-            let updateObj = {};
-            updateObj[`step${stepNum}`] = val;
-            
-            try {
-                // Changing this will immediately reflect on the premium page via onSnapshot
-                await up
+            const gmbViews = document.getElementById(`view_${uid}
