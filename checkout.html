@@ -140,12 +140,11 @@
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // updateDoc ki jagah setDoc import kiya hai
-        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let currentUser = null;
-        let finalPlanName = 'Growth'; // Default laga diya
-        let finalPlanAmount = 999;    // Default laga diya
+        let finalPlanName = 'Growth'; 
+        let finalPlanAmount = 999;    
 
         onAuthStateChanged(auth, async (user) => {
             if (user) currentUser = user;
@@ -177,12 +176,19 @@
             
             if(currentUser) {
                 try {
-                    // setDoc use kiya with merge:true (Ye naya data add kar dega bina error ke)
+                    // Yahan pura updated data jaa raha hai taaki Admin properly work kare
                     await setDoc(doc(db, "clients", currentUser.uid), { 
+                        name: currentUser.displayName || "New Client", // Name aayega
+                        email: currentUser.email,                     // Email aayega
                         planName: finalPlanName,
                         planAmount: finalPlanAmount,
                         utr: utr, 
-                        status: "Pending Verification" 
+                        status: "Pending Verification",
+                        step1: "pending",                             // Step 1
+                        step2: "pending",                             // Step 2
+                        step3: "pending",                             // Step 3
+                        step4: "pending",                             // Step 4
+                        step5: "pending"                              // Step 5
                     }, { merge: true });
                     
                     document.getElementById('paymentForm').classList.add('hidden');
@@ -190,11 +196,9 @@
                     
                     setTimeout(() => window.location.href = 'dashboard.html', 2000);
                 } catch (error) {
-                    // Agar ab error aayi toh console aur popup dono mein dikhegi
                     console.error("Firebase Error: ", error);
                     alert("Error: Data save nahi ho raha! Apne Firebase Firestore Rules check karo.\n\n" + error.message);
                     
-                    // Error aane par button wapas theek ho jayega taaki hang na ho
                     btn.innerHTML = 'Submit Payment <i class="fas fa-arrow-right ml-2"></i>';
                     btn.disabled = false;
                 }
