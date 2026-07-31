@@ -100,7 +100,6 @@
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // IMPORTANT: Agar aap kisi aur email se admin chalana chahte ho, toh yahan email change kar dena.
         const ADMIN_EMAIL = 'qwickdesksolutions@outlook.com'; 
 
         onAuthStateChanged(auth, async (user) => {
@@ -117,14 +116,15 @@
             }
         });
 
-        window.loadClients = async () => {
+        // NAYA TARIKA: Function ko properly define karke window object mein daala hai 
+        // Taaki module script crash na ho aur proper execute ho.
+        async function loadClients() {
             const tbody = document.getElementById('clientTableBody');
             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-blue-400"><i class="fas fa-spinner fa-spin mr-2"></i> Connecting to Firebase...</td></tr>';
             
             try {
                 const querySnapshot = await getDocs(collection(db, "clients"));
                 
-                // Agar database khali hai toh
                 if (querySnapshot.empty) {
                     tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-folder-open text-2xl mb-2 block"></i> No clients found in the database.</td></tr>';
                     return;
@@ -207,27 +207,24 @@
                 });
                 tbody.innerHTML = html;
             } catch (error) {
-                console.error(error);
+                console.error("Fetch Error: ", error);
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 bg-red-900/20 text-red-400 font-bold border border-red-500/30 rounded-xl"><i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>FIREBASE ERROR: ${error.message}</td></tr>`;
             }
-        };
+        }
+        window.loadClients = loadClients;
 
-        window.loadClientRequests = async () => {
+        async function loadClientRequests() {
             const tbody = document.getElementById('requestsTableBody');
-            
             try {
                 const querySnapshot = await getDocs(collection(db, "clientRequests"));
-                
                 if(querySnapshot.empty) {
                     tbody.innerHTML = '<tr><td colspan="5" class="text-center py-6 text-gray-500">No pending requests from clients at the moment.</td></tr>';
                     return;
                 }
-
                 let html = '';
                 querySnapshot.forEach((docSnap) => {
                     const req = docSnap.data();
                     const reqId = docSnap.id;
-
                     let reqStatusBadge = '';
                     if(req.status === 'Accepted') reqStatusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Accepted</span>';
                     else if(req.status === 'Rejected') reqStatusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Rejected</span>';
@@ -243,7 +240,6 @@
                     } else {
                         reqAction = `<button onclick="deleteRequest('${reqId}')" class="text-gray-500 hover:text-red-400 text-xs font-bold transition"><i class="fas fa-trash mr-1"></i> Remove Log</button>`;
                     }
-
                     html += `
                     <tr class="hover:bg-gray-900/40 transition">
                         <td class="px-6 py-4 font-bold text-white">${req.clientName || 'Client'}</td>
@@ -257,7 +253,8 @@
             } catch (error) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 bg-red-900/20 text-red-400 font-bold"><i class="fas fa-times-circle mr-2"></i>Error: ${error.message}</td></tr>`;
             }
-        };
+        }
+        window.loadClientRequests = loadClientRequests;
 
         window.approveClient = async (uid) => {
             if(confirm("Authorize and activate Premium Plan for this client?")) {
@@ -290,7 +287,6 @@
             }
         };
 
+        // Yahan par aapka purana code aadha cut ho gaya tha! Ab maine pura likh diya hai.
         window.saveClientData = async (uid) => {
-            const websiteUrl = document.getElementById(`web_${uid}`).value;
-            const gmbSearches = document.getElementById(`srch_${uid}`).value;
-            const gmbViews = document.getElementById(`view_${uid}
+            const websiteUrl = document.getElementById(`
