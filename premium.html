@@ -1,145 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Workspace | QwickDeskSolutions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Premium Workspace | QwickDeskSolutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .premium-bg {
-            background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.15), transparent 40%),
-                        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.15), transparent 40%);
+            background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.12), transparent 40%),
+                        #030712;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
     </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen premium-bg p-4 md:p-8">
+<body class="bg-gray-950 text-white min-h-screen premium-bg p-4 md:p-8 font-sans">
     
+    <!-- Security Loader -->
     <div id="securityBlock" class="fixed inset-0 bg-gray-950 z-50 flex flex-col items-center justify-center">
-        <i class="fas fa-shield-alt text-5xl text-blue-500 mb-4 animate-pulse"></i>
-        <h2 class="text-2xl font-bold">Verifying Premium Access...</h2>
+        <div class="relative">
+            <div class="w-16 h-16 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+            <i class="fas fa-shield-alt text-xl text-purple-400 absolute inset-0 flex items-center justify-center"></i>
+        </div>
+        <h2 class="text-lg font-bold mt-4 tracking-wider text-gray-300">SECURE ENTERPRISE VERIFICATION...</h2>
     </div>
 
-    <div class="max-w-6xl mx-auto space-y-6 md:space-y-8 hidden" id="premiumContent">
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto space-y-6 md:space-y-8 hidden" id="premiumContent">
         
-        <header class="glass p-5 md:p-6 rounded-3xl border border-purple-500/30 flex flex-col md:flex-row justify-between items-center shadow-[0_0_30px_rgba(168,85,247,0.1)] gap-4">
+        <!-- Header -->
+        <header class="glass-card p-5 md:p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center shadow-2xl gap-4">
             <div class="flex items-center gap-4 w-full md:w-auto">
-                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/40 shrink-0">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30 shrink-0">
                     <i class="fas fa-crown text-xl md:text-2xl text-yellow-300"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl md:text-2xl font-bold">Premium Workspace</h1>
-                    <p class="text-gray-400 text-xs md:text-sm">Client: <span id="premClientName" class="text-white font-semibold">Loading...</span></p>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl md:text-2xl font-black tracking-tight">QwickDesk Premium</h1>
+                        <span class="px-2.5 py-0.5 bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[10px] font-bold uppercase rounded-full">Active Tier</span>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-0.5">Enterprise Client: <span id="premClientName" class="text-white font-semibold">Loading...</span></p>
                 </div>
             </div>
-            <a href="dashboard.html" class="bg-gray-800 hover:bg-gray-700 w-full md:w-auto text-center px-5 py-2.5 rounded-xl text-sm font-bold border border-gray-700 transition">Back to Basic</a>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <button onclick="openRequestModal()" class="flex-1 md:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-center px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold shadow-lg shadow-blue-500/20 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-edit"></i> Request Edit / New Page
+                </button>
+                <a href="dashboard.html" class="bg-gray-900/80 hover:bg-gray-800 text-center px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-gray-700/80 transition text-gray-300">Dashboard</a>
+            </div>
         </header>
 
+        <!-- Grid Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
+            <!-- Left 2 Columns: Live Website Link & 5-Step Tracker -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Website Link -->
-                <div class="glass p-5 md:p-6 rounded-3xl border border-blue-500/30 bg-blue-900/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                
+                <!-- Live Website Banner -->
+                <div class="glass-card p-6 rounded-3xl border-blue-500/30 bg-gradient-to-r from-blue-950/20 to-purple-950/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <p class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1">Your Website Link</p>
+                        <p class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1"><i class="fas fa-link mr-1"></i> Production Deployment</p>
                         <h2 class="text-lg md:text-xl font-bold flex items-center gap-2">
-                            <i class="fas fa-globe text-gray-500"></i> <span class="text-gray-300 break-all">Pending Go-Live</span>
+                            <span id="clientWebsiteUrl" class="text-gray-200 break-all font-mono text-sm md:text-base">Provisioning Domain...</span>
                         </h2>
                     </div>
-                    <span class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-full text-xs font-bold text-gray-400 whitespace-nowrap"><i class="fas fa-lock mr-1"></i> SSL Provisioning</span>
+                    <span id="siteStatusBadge" class="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-xs font-bold text-blue-300 whitespace-nowrap flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span> Setup in Progress
+                    </span>
                 </div>
 
-                <!-- Dev Phases -->
-                <div class="glass p-6 md:p-8 rounded-3xl border border-gray-800">
-                    <h3 class="text-lg font-bold mb-6 border-b border-gray-800 pb-4"><i class="fas fa-code text-purple-400 mr-2"></i> Development Phases</h3>
+                <!-- 5-Step Advanced Tracker -->
+                <div class="glass-card p-6 md:p-8 rounded-3xl">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-800">
+                        <h3 class="text-base md:text-lg font-bold flex items-center gap-2">
+                            <i class="fas fa-tasks text-purple-400"></i> Live Project Milestone Tracker
+                        </h3>
+                        <span class="text-xs text-gray-400 font-mono">Syncs via Admin CRM</span>
+                    </div>
                     
-                    <div class="space-y-6">
-                        <div class="flex gap-4 items-start">
-                            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center shrink-0"><i class="fas fa-check text-emerald-400 text-sm"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm md:text-base">Phase 1: UI/UX Architecture</h4>
-                                <p class="text-xs md:text-sm text-gray-400 mt-1">Wireframing, brand colors, and mobile-first design approved.</p>
+                    <div class="space-y-6" id="stepsContainer">
+                        <!-- Step 1 -->
+                        <div class="flex gap-4 items-start relative pb-6 border-b border-gray-800/60 last:border-none last:pb-0">
+                            <div id="step1Icon" class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 transition-all">
+                                <i class="fas fa-circle text-gray-500 text-xs"></i>
                             </div>
-                        </div>
-                        
-                        <div class="flex gap-4 items-start">
-                            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-500/20 border border-blue-500 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.3)]"><i class="fas fa-spinner fa-spin text-blue-400 text-sm"></i></div>
                             <div class="w-full">
-                                <h4 class="font-bold text-blue-400 text-sm md:text-base">Phase 2: Code & CMS Setup</h4>
-                                <p class="text-xs md:text-sm text-blue-300/70 mt-1">Writing custom Tailwind, adding WhatsApp chat.</p>
-                                <div class="w-full bg-gray-800 h-2 rounded-full mt-3 overflow-hidden"><div class="bg-blue-500 h-full w-1/2 rounded-full"></div></div>
+                                <div class="flex justify-between items-center">
+                                    <h4 id="step1Title" class="font-bold text-gray-400 text-sm md:text-base">Step 1: GMB Optimization Start</h4>
+                                    <span id="step1Badge" class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-bold uppercase">Pending</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Google My Business listing audit, keyword tagging, and profile setup.</p>
                             </div>
                         </div>
 
-                        <div class="flex gap-4 items-start opacity-50">
-                            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0"><i class="fas fa-lock text-gray-500 text-sm"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-300 text-sm md:text-base">Phase 3: Testing & Go Live</h4>
-                                <p class="text-xs md:text-sm text-gray-400 mt-1">SEO Tagging, PageSpeed optimization, public domain.</p>
+                        <!-- Step 2 -->
+                        <div class="flex gap-4 items-start relative pb-6 border-b border-gray-800/60">
+                            <div id="step2Icon" class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 transition-all">
+                                <i class="fas fa-circle text-gray-500 text-xs"></i>
+                            </div>
+                            <div class="w-full">
+                                <div class="flex justify-between items-center">
+                                    <h4 id="step2Title" class="font-bold text-gray-400 text-sm md:text-base">Step 2: Website Wireframe & Design Started</h4>
+                                    <span id="step2Badge" class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-bold uppercase">Pending</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">UI/UX architecture, layout planning, and brand color palette integration.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="flex gap-4 items-start relative pb-6 border-b border-gray-800/60">
+                            <div id="step3Icon" class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 transition-all">
+                                <i class="fas fa-circle text-gray-500 text-xs"></i>
+                            </div>
+                            <div class="w-full">
+                                <div class="flex justify-between items-center">
+                                    <h4 id="step3Title" class="font-bold text-gray-400 text-sm md:text-base">Step 3: Development & Content Integration</h4>
+                                    <span id="step3Badge" class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-bold uppercase">Pending</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Writing responsive custom code, adding media assets, and WhatsApp chat widget.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="flex gap-4 items-start relative pb-6 border-b border-gray-800/60">
+                            <div id="step4Icon" class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 transition-all">
+                                <i class="fas fa-circle text-gray-500 text-xs"></i>
+                            </div>
+                            <div class="w-full">
+                                <div class="flex justify-between items-center">
+                                    <h4 id="step4Title" class="font-bold text-gray-400 text-sm md:text-base">Step 4: Review & Testing</h4>
+                                    <span id="step4Badge" class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-bold uppercase">Pending</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Quality assurance, mobile responsiveness checks, and speed optimization.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="flex gap-4 items-start relative">
+                            <div id="step5Icon" class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 transition-all">
+                                <i class="fas fa-circle text-gray-500 text-xs"></i>
+                            </div>
+                            <div class="w-full">
+                                <div class="flex justify-between items-center">
+                                    <h4 id="step5Title" class="font-bold text-gray-400 text-sm md:text-base">Step 5: Final Launch & Handover</h4>
+                                    <span id="step5Badge" class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-bold uppercase">Pending</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Deployment to live production domain with SSL security certificates.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Right Column: GMB Quick Status & Priority Support -->
             <div class="space-y-6">
-                <!-- GMB Tracker -->
-                <div class="glass p-6 rounded-3xl border border-green-500/30">
+                <!-- GMB Stats Widget -->
+                <div class="glass-card p-6 rounded-3xl border-emerald-500/20">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fab fa-google text-2xl text-green-400"></i>
-                        <h3 class="font-bold">Google My Business</h3>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i class="fab fa-google text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">GMB Metrics</h3>
+                            <p class="text-[10px] text-gray-400">Google My Business Analytics</p>
+                        </div>
                     </div>
-                    <div class="bg-gray-900/50 p-4 rounded-2xl border border-gray-800 mb-4">
-                        <p class="text-xs text-gray-500 uppercase font-bold mb-1">Listing Status</p>
-                        <p class="text-yellow-400 font-semibold text-sm"><i class="fas fa-tools mr-1"></i> Under Optimization</p>
+                    <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800 mb-4">
+                        <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Current Standing</p>
+                        <p class="text-emerald-400 font-semibold text-xs flex items-center gap-1.5">
+                            <i class="fas fa-sync-alt fa-spin"></i> Live Tracking Active
+                        </p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800 text-center">
-                            <p class="text-[10px] md:text-xs text-gray-500">Searches</p>
-                            <p class="text-base md:text-lg font-bold text-white">--</p>
+                        <div class="bg-gray-900/60 p-3 rounded-xl border border-gray-800 text-center">
+                            <p class="text-[10px] text-gray-400 uppercase">Searches</p>
+                            <p id="gmbSearches" class="text-lg font-bold text-white font-mono">--</p>
                         </div>
-                        <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800 text-center">
-                            <p class="text-[10px] md:text-xs text-gray-500">Map Views</p>
-                            <p class="text-base md:text-lg font-bold text-white">--</p>
+                        <div class="bg-gray-900/60 p-3 rounded-xl border border-gray-800 text-center">
+                            <p class="text-[10px] text-gray-400 uppercase">Map Views</p>
+                            <p id="gmbViews" class="text-lg font-bold text-white font-mono">--</p>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-4 text-center">Data will sync after domain goes live.</p>
                 </div>
 
                 <!-- Support Widget -->
-                <div class="glass p-6 rounded-3xl border border-gray-800 text-center">
-                    <h3 class="font-bold mb-2">Need Priority Help?</h3>
-                    <p class="text-xs text-gray-400 mb-4">Your developer is one click away.</p>
-                    <a href="https://wa.me/919920048859" target="_blank" class="block w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-xl transition text-sm">
-                        <i class="fab fa-whatsapp text-lg mr-2"></i> WhatsApp Support
+                <div class="glass-card p-6 rounded-3xl text-center">
+                    <div class="w-12 h-12 bg-green-500/10 border border-green-500/30 rounded-2xl flex items-center justify-center mx-auto mb-3 text-green-400">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-sm mb-1">Direct Developer Support</h3>
+                    <p class="text-xs text-gray-400 mb-4">Have questions regarding your build? Connect instantly.</p>
+                    <a href="https://wa.me/919920048859" target="_blank" class="block w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-xl transition text-xs shadow-lg shadow-green-600/20">
+                        <i class="fab fa-whatsapp mr-1 text-sm"></i> Chat on WhatsApp
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Request Modal (Edit / New Page) -->
+    <div id="requestModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full p-6 md:p-8 rounded-3xl border border-purple-500/30 relative">
+            <button onclick="closeRequestModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg"><i class="fas fa-times"></i></button>
+            <h3 class="text-lg font-bold mb-1"><i class="fas fa-edit text-purple-400 mr-2"></i> Submit Custom Request</h3>
+            <p class="text-xs text-gray-400 mb-6">Request changes to your current website or order a new page layout.</p>
+            
+            <form id="clientRequestForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase mb-2">Request Type</label>
+                    <select id="reqType" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
+                        <option value="Website Edit">Website Edit / Modification</option>
+                        <option value="New Page Request">New Page Request (Requires Separate Verification)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase mb-2">Describe Your Requirement / Details</label>
+                    <textarea id="reqDetails" rows="4" required placeholder="Mention what needs to be changed, added, or updated..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+                </div>
+                <button type="submit" id="submitReqBtn" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 py-3 rounded-xl font-bold text-sm shadow-lg shadow-purple-600/20 transition">
+                    Send Request to Admin
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Logic -->
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUserId = null;
+        let currentUserName = '';
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                currentUserId = user.uid;
                 const docSnap = await getDoc(doc(db, "clients", user.uid));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.status !== 'Active') {
-                        alert("Access Denied: Premium Workspace is locked until payment is verified.");
+                        alert("Access Denied: Premium Workspace is locked until payment is verified by admin.");
                         window.location.href = 'dashboard.html';
                         return;
                     }
+                    currentUserName = data.name || user.email;
                     document.getElementById('securityBlock').classList.add('hidden');
                     document.getElementById('premiumContent').classList.remove('hidden');
-                    document.getElementById('premClientName').innerText = data.name || user.email;
-                } else { window.location.href = 'dashboard.html'; }
-            } else { window.location.href = 'login.html'; }
-        });
-    </script>
-</body>
-</html>
+                    document.getElementById('premClientName').innerText = currentUserName;
 
+                    // Load website URL if available
+                    if (data.websiteUrl) {
+                        document.getElementById('clientWebsiteUrl').innerHTML = `<a href="${data.websiteUrl}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1.5"><i class="fas fa-external-link-alt text-xs"></i> ${data.websiteUrl}</a>`;
+                        document.getElementById('siteStatusBadge').className = "px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-xs font-bold text-emerald-400 whitespace-nowrap flex items-center gap-2";
+                        document.getElementById('siteStatusBadge').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live Online`;
+                    }
+
+                    // Load GMB stats if available
+                    if (data.gmbSearches) document.getElementById('gmbSearches').innerText = data.gmbSearches;
+                    if (data.gmbViews) document.getElementById('gmbViews').innerText = data.gmbViews;
+
+                    // Load 5 Steps Status
+                    updateStepUI(1, data.step1);
+                    updateStepUI(2, data.step2);
+                    updateStepUI(3, data.step3);
+                    updateStepUI(4, data.step4);
+                    updateStepUI(5, data.step5);
+
+                } else { 
+                    window.location.href = 'dashboard.html'; 
+                }
+            } else { 
+                window.location.href = 'login.html'; 
+            }
+        });
+
+        function updateStepUI(stepNum, status) {
+            const icon = document.getElementById(`step3Icon`.replace('3', stepNum));
+            const title = document.getElementById(`step3Title`.replace('3', stepNum));
+            const badge = document.getElementById(`step3Badge`.replace('3', stepNum));
+
+            if (status === 'completed') {
+                icon.className = "w-8 h-8 md:w-10 md:h-10 rounded-xl bg-emerald-500/20 border border-emerald-500 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.3)]";
+                icon.innerHTML = '<i class="fas fa-check text-emerald-400 text-sm"></i>';
+                title.className = "font-bold text-white text-sm md:text-base";
+                badge.className = "text-[10px] px-2 py-0.5 rounded bg-em
