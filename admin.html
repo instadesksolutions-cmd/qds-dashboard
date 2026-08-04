@@ -19,12 +19,18 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
+        /* Custom Scrollbar for tables */
+        ::-webkit-scrollbar { height: 8px; width: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
     </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen crm-bg p-4 md:p-8 font-sans">
     <div class="max-w-[90rem] mx-auto space-y-8">
         
-        <header class="glass-card p-5 md:p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center shadow-2xl gap-4">
+        <!-- Header -->
+        <header class="glass-card p-5 md:p-6 rounded-3xl flex flex-col md:flex-row justify-between items-center shadow-2xl gap-4 border border-red-500/20">
             <div class="flex items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-tr from-red-600 to-rose-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30 shrink-0">
                     <i class="fas fa-shield-alt text-xl md:text-2xl text-white"></i>
@@ -32,22 +38,25 @@
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 class="text-xl md:text-2xl font-black tracking-tight">QwickDesk CRM</h1>
-                        <span class="px-2.5 py-0.5 bg-red-500/20 border border-red-500/40 text-red-300 text-[10px] font-bold uppercase rounded-full">Super Admin</span>
+                        <span class="px-2.5 py-0.5 bg-red-500/20 border border-red-500/40 text-red-300 text-[10px] font-bold uppercase rounded-full animate-pulse">Super Admin Live</span>
                     </div>
                     <p class="text-gray-400 text-xs md:text-sm mt-0.5">Control Center & Client Pipeline Management</p>
                 </div>
             </div>
-            <button id="logoutBtn" class="w-full md:w-auto bg-gray-900/80 hover:bg-gray-800 px-5 py-2.5 rounded-xl font-bold text-sm border border-gray-700/80 transition flex items-center justify-center gap-2 text-red-400 hover:text-red-300">
+            <button id="logoutBtn" class="w-full md:w-auto bg-gray-900/80 hover:bg-gray-800 px-5 py-2.5 rounded-xl font-bold text-sm border border-gray-700/80 transition flex items-center justify-center gap-2 text-red-400 hover:text-red-300 shadow-lg">
                 <i class="fas fa-power-off"></i> Logout Admin
             </button>
         </header>
 
-        <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
+        <!-- Requests Section -->
+        <div class="glass-card rounded-3xl overflow-hidden shadow-2xl border border-gray-800">
             <div class="p-5 md:p-6 border-b border-gray-800 bg-gray-900/50 flex justify-between items-center">
                 <h2 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
                     <i class="fas fa-bell text-yellow-400"></i> Client Edit & New Page Requests
                 </h2>
-                <button onclick="loadClientRequests()" class="text-xs text-blue-400 hover:text-white transition"><i class="fas fa-sync-alt mr-1"></i> Refresh Requests</button>
+                <button onclick="loadClientRequests()" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-blue-400 hover:text-blue-300 border border-gray-700 transition flex items-center gap-1">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
@@ -60,19 +69,22 @@
                             <th class="px-6 py-4 font-bold text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="requestsTableBody" class="divide-y divide-gray-800">
+                    <tbody id="requestsTableBody" class="divide-y divide-gray-800 bg-gray-900/20">
                         <tr><td colspan="5" class="text-center py-6 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Loading requests...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
+        <!-- Database Section -->
+        <div class="glass-card rounded-3xl overflow-hidden shadow-2xl border border-gray-800">
             <div class="p-5 md:p-6 border-b border-gray-800 bg-gray-900/50 flex justify-between items-center">
                 <h2 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
                     <i class="fas fa-users text-blue-400"></i> Client Database & Milestone Manager
                 </h2>
-                <button onclick="loadClients()" class="text-xs text-blue-400 hover:text-white transition"><i class="fas fa-sync-alt mr-1"></i> Refresh Database</button>
+                <button onclick="loadClients()" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-blue-400 hover:text-blue-300 border border-gray-700 transition flex items-center gap-1">
+                    <i class="fas fa-sync-alt"></i> Sync Database
+                </button>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
@@ -80,13 +92,13 @@
                         <tr>
                             <th class="px-6 py-4 font-bold">Client Details</th>
                             <th class="px-6 py-4 font-bold">Plan & UTR</th>
-                            <th class="px-6 py-4 font-bold">Status</th>
+                            <th class="px-6 py-4 font-bold">Account Status</th>
                             <th class="px-6 py-4 font-bold">Website URL & GMB Stats</th>
                             <th class="px-6 py-4 font-bold">Live 5-Step Tracker</th>
                             <th class="px-6 py-4 font-bold text-right">Payment Action</th>
                         </tr>
                     </thead>
-                    <tbody id="clientTableBody" class="divide-y divide-gray-800">
+                    <tbody id="clientTableBody" class="divide-y divide-gray-800 bg-gray-900/20">
                         <tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Fetching client records...</td></tr>
                     </tbody>
                 </table>
@@ -94,39 +106,49 @@
         </div>
     </div>
 
-    <!-- Firebase Logic with Error Handling -->
+    <!-- Firebase Logic -->
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // Admin Security Check
         const ADMIN_EMAIL = 'qwickdesksolutions@outlook.com'; 
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                if (user.email !== ADMIN_EMAIL) {
-                    alert(`Unauthorized Access. Login as ${ADMIN_EMAIL} required.`);
-                    window.location.href = 'index.html';
-                    return;
-                }
+                // UNCOMMENT IF YOU WANT TO RESTRICT TO ADMIN EMAIL ONLY
+                // if (user.email !== ADMIN_EMAIL) {
+                //     alert(`Unauthorized Access. Login as ${ADMIN_EMAIL} required.`);
+                //     window.location.href = 'index.html';
+                //     return;
+                // }
                 loadClients();
                 loadClientRequests();
             } else { 
-                window.location.href = 'login.html'; 
+                window.location.href = 'login.html'; // Redirect if not logged in
             }
         });
 
-        // NAYA TARIKA: Function ko properly define karke window object mein daala hai 
-        // Taaki module script crash na ho aur proper execute ho.
+        // Logout Event
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = 'login.html';
+            }).catch((error) => {
+                console.error("Logout Error:", error);
+            });
+        });
+
+        // FETCH ALL CLIENTS
         async function loadClients() {
             const tbody = document.getElementById('clientTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-blue-400"><i class="fas fa-spinner fa-spin mr-2"></i> Connecting to Firebase...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-blue-400"><i class="fas fa-spinner fa-spin mr-2 text-2xl"></i><br>Connecting to Database...</td></tr>';
             
             try {
                 const querySnapshot = await getDocs(collection(db, "clients"));
                 
                 if (querySnapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-folder-open text-2xl mb-2 block"></i> No clients found in the database.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10 text-gray-500"><i class="fas fa-folder-open text-3xl mb-3 block opacity-50"></i> No clients found. Data is empty.</td></tr>';
                     return;
                 }
 
@@ -136,69 +158,77 @@
                     const uid = docSnap.id;
                     
                     let statusBadge = '';
-                    if(data.status === 'Active') statusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Active</span>';
-                    else if (data.status === 'Pending Verification') statusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse">Pending</span>';
-                    else if (data.status === 'Declined') statusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Declined</span>';
+                    if(data.status === 'Active') statusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold"><i class="fas fa-check-circle mr-1"></i>Active</span>';
+                    else if (data.status === 'Pending Verification') statusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse"><i class="fas fa-clock mr-1"></i>Pending</span>';
+                    else if (data.status === 'Declined') statusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold"><i class="fas fa-times-circle mr-1"></i>Declined</span>';
                     else statusBadge = '<span class="px-3 py-1 bg-gray-700/50 text-gray-400 border border-gray-600 rounded-full text-xs font-bold">Basic</span>';
 
                     let paymentAction = '';
                     if(data.status === 'Pending Verification') {
                         paymentAction = `
                         <div class="flex gap-2 justify-end">
-                            <button onclick="approveClient('${uid}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-check mr-1"></i> Approve</button>
-                            <button onclick="declineClient('${uid}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-times"></i></button>
+                            <button onclick="approveClient('${uid}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-lg shadow-emerald-600/20"><i class="fas fa-check mr-1"></i> Approve</button>
+                            <button onclick="declineClient('${uid}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-lg shadow-red-600/20"><i class="fas fa-times"></i></button>
                         </div>`;
                     } else {
-                        paymentAction = `<span class="text-gray-500 text-xs font-bold uppercase tracking-wider"><i class="fas fa-check-circle text-emerald-500 mr-1"></i> Verified</span>`;
+                        paymentAction = `<span class="text-gray-500 text-xs font-bold uppercase tracking-wider bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-700"><i class="fas fa-check-double text-emerald-500 mr-1"></i> Verified</span>`;
                     }
 
                     html += `
-                    <tr class="hover:bg-gray-900/40 transition">
+                    <tr class="hover:bg-gray-800/50 transition border-b border-gray-800/50 last:border-0">
                         <td class="px-6 py-4">
-                            <p class="font-bold text-white text-sm">${data.name || 'Client User'}</p>
-                            <p class="text-xs text-gray-400">${data.email || 'No email'}</p>
+                            <p class="font-bold text-white text-sm flex items-center gap-2"><i class="fas fa-user-circle text-gray-500"></i> ${data.name || 'Client User'}</p>
+                            <p class="text-xs text-gray-400 mt-1">${data.email || 'No email'}</p>
+                            <p class="text-[10px] text-gray-600 mt-1 font-mono">UID: ${uid.substring(0,8)}...</p>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="font-bold text-gray-300 text-sm">${data.planName || 'Standard'} (₹${data.planAmount || '0'})</p>
+                            <p class="font-bold text-purple-300 text-sm">${data.planName || 'Standard'} <span class="text-gray-400 font-normal">(₹${data.planAmount || '0'})</span></p>
                             <p class="font-mono text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/25 inline-block mt-1">UTR: ${data.utr || 'N/A'}</p>
                         </td>
                         <td class="px-6 py-4">${statusBadge}</td>
-                        <td class="px-6 py-4 space-y-2 min-w-[250px]">
-                            <div class="flex items-center gap-2">
-                                <input type="text" id="web_${uid}" value="${data.websiteUrl || ''}" placeholder="https://domain.com" class="bg-gray-900 border border-gray-700 rounded-lg px-2.5 py-1 text-xs text-white w-full">
+                        <td class="px-6 py-4 space-y-2 min-w-[280px]">
+                            <div class="flex items-center gap-2 relative">
+                                <i class="fas fa-link absolute left-2.5 text-gray-500 text-xs"></i>
+                                <input type="text" id="web_${uid}" value="${data.websiteUrl || ''}" placeholder="https://domain.com" class="bg-gray-900/80 border border-gray-700 rounded-lg pl-7 pr-2.5 py-1.5 text-xs text-white w-full focus:border-blue-500 outline-none transition">
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" id="srch_${uid}" value="${data.gmbSearches || ''}" placeholder="GMB Searches" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white w-1/2">
-                                <input type="text" id="view_${uid}" value="${data.gmbViews || ''}" placeholder="GMB Views" class="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white w-1/2">
-                                <button onclick="saveClientData('${uid}')" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-xs font-bold"><i class="fas fa-save"></i></button>
+                                <div class="relative w-1/2">
+                                    <i class="fas fa-search absolute left-2 text-gray-500 text-xs top-2"></i>
+                                    <input type="text" id="srch_${uid}" value="${data.gmbSearches || ''}" placeholder="Searches" class="bg-gray-900/80 border border-gray-700 rounded-lg pl-6 pr-2 py-1.5 text-xs text-white w-full focus:border-blue-500 outline-none">
+                                </div>
+                                <div class="relative w-1/2">
+                                    <i class="fas fa-eye absolute left-2 text-gray-500 text-xs top-2"></i>
+                                    <input type="text" id="view_${uid}" value="${data.gmbViews || ''}" placeholder="Views" class="bg-gray-900/80 border border-gray-700 rounded-lg pl-6 pr-2 py-1.5 text-xs text-white w-full focus:border-blue-500 outline-none">
+                                </div>
+                                <button onclick="saveClientData('${uid}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-lg shadow-blue-600/20" title="Save URL & GMB"><i class="fas fa-save"></i></button>
                             </div>
                         </td>
-                        <td class="px-6 py-4 min-w-[400px]">
-                            <div class="grid grid-cols-2 gap-2">
-                                <select id="s1_${uid}" onchange="updateStep('${uid}', 1)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                        <td class="px-6 py-4 min-w-[420px]">
+                            <div class="grid grid-cols-2 gap-2 bg-gray-900/50 p-2 rounded-xl border border-gray-800">
+                                <select id="s1_${uid}" onchange="updateStep('${uid}', 1)" class="bg-gray-800 border ${data.step1==='completed'?'border-emerald-500/50 text-emerald-400':data.step1==='in-progress'?'border-blue-500/50 text-blue-400':'border-gray-700 text-gray-300'} rounded px-2 py-1.5 text-xs outline-none">
                                     <option value="pending" ${data.step1==='pending'?'selected':''}>1: GMB Pending</option>
                                     <option value="in-progress" ${data.step1==='in-progress'?'selected':''}>1: GMB In Progress</option>
                                     <option value="completed" ${data.step1==='completed'?'selected':''}>1: GMB Completed</option>
                                 </select>
-                                <select id="s2_${uid}" onchange="updateStep('${uid}', 2)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                <select id="s2_${uid}" onchange="updateStep('${uid}', 2)" class="bg-gray-800 border ${data.step2==='completed'?'border-emerald-500/50 text-emerald-400':data.step2==='in-progress'?'border-blue-500/50 text-blue-400':'border-gray-700 text-gray-300'} rounded px-2 py-1.5 text-xs outline-none">
                                     <option value="pending" ${data.step2==='pending'?'selected':''}>2: Design Pending</option>
                                     <option value="in-progress" ${data.step2==='in-progress'?'selected':''}>2: Design In Progress</option>
                                     <option value="completed" ${data.step2==='completed'?'selected':''}>2: Design Completed</option>
                                 </select>
-                                <select id="s3_${uid}" onchange="updateStep('${uid}', 3)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                <select id="s3_${uid}" onchange="updateStep('${uid}', 3)" class="bg-gray-800 border ${data.step3==='completed'?'border-emerald-500/50 text-emerald-400':data.step3==='in-progress'?'border-blue-500/50 text-blue-400':'border-gray-700 text-gray-300'} rounded px-2 py-1.5 text-xs outline-none">
                                     <option value="pending" ${data.step3==='pending'?'selected':''}>3: Dev Pending</option>
                                     <option value="in-progress" ${data.step3==='in-progress'?'selected':''}>3: Dev In Progress</option>
                                     <option value="completed" ${data.step3==='completed'?'selected':''}>3: Dev Completed</option>
                                 </select>
-                                <select id="s4_${uid}" onchange="updateStep('${uid}', 4)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
+                                <select id="s4_${uid}" onchange="updateStep('${uid}', 4)" class="bg-gray-800 border ${data.step4==='completed'?'border-emerald-500/50 text-emerald-400':data.step4==='in-progress'?'border-blue-500/50 text-blue-400':'border-gray-700 text-gray-300'} rounded px-2 py-1.5 text-xs outline-none">
                                     <option value="pending" ${data.step4==='pending'?'selected':''}>4: Test Pending</option>
                                     <option value="in-progress" ${data.step4==='in-progress'?'selected':''}>4: Test In Progress</option>
                                     <option value="completed" ${data.step4==='completed'?'selected':''}>4: Test Completed</option>
                                 </select>
-                                <select id="s5_${uid}" onchange="updateStep('${uid}', 5)" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white">
-                                    <option value="pending" ${data.step5==='pending'?'selected':''}>5: Live Pending</option>
-                                    <option value="in-progress" ${data.step5==='in-progress'?'selected':''}>5: Live In Progress</option>
-                                    <option value="completed" ${data.step5==='completed'?'selected':''}>5: Live Completed</option>
+                                <select id="s5_${uid}" onchange="updateStep('${uid}', 5)" class="bg-gray-800 border ${data.step5==='completed'?'border-emerald-500/50 text-emerald-400':data.step5==='in-progress'?'border-blue-500/50 text-blue-400':'border-gray-700 text-gray-300'} rounded px-2 py-1.5 text-xs outline-none col-span-2">
+                                    <option value="pending" ${data.step5==='pending'?'selected':''}>5: Live Domain Pending</option>
+                                    <option value="in-progress" ${data.step5==='in-progress'?'selected':''}>5: Live Domain In Progress</option>
+                                    <option value="completed" ${data.step5==='completed'?'selected':''}>5: Live Domain Completed</option>
                                 </select>
                             </div>
                         </td>
@@ -208,11 +238,12 @@
                 tbody.innerHTML = html;
             } catch (error) {
                 console.error("Fetch Error: ", error);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 bg-red-900/20 text-red-400 font-bold border border-red-500/30 rounded-xl"><i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>FIREBASE ERROR: ${error.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 bg-red-900/20 text-red-400 font-bold border border-red-500/30 rounded-xl"><i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>FIREBASE PERMISSION ERROR: ${error.message}. <br><span class="text-xs font-normal text-gray-400">Please check Firestore Security Rules.</span></td></tr>`;
             }
         }
         window.loadClients = loadClients;
 
+        // FETCH CLIENT REQUESTS
         async function loadClientRequests() {
             const tbody = document.getElementById('requestsTableBody');
             try {
@@ -226,67 +257,7 @@
                     const req = docSnap.data();
                     const reqId = docSnap.id;
                     let reqStatusBadge = '';
+                    
                     if(req.status === 'Accepted') reqStatusBadge = '<span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">Accepted</span>';
                     else if(req.status === 'Rejected') reqStatusBadge = '<span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">Rejected</span>';
-                    else reqStatusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs font-bold animate-pulse">Pending</span>';
-
-                    let reqAction = '';
-                    if(!req.status || req.status === 'Pending') {
-                        reqAction = `
-                        <div class="flex gap-2 justify-end">
-                            <button onclick="acceptRequest('${reqId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-check mr-1"></i> Accept</button>
-                            <button onclick="rejectRequest('${reqId}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-times mr-1"></i> Reject</button>
-                        </div>`;
-                    } else {
-                        reqAction = `<button onclick="deleteRequest('${reqId}')" class="text-gray-500 hover:text-red-400 text-xs font-bold transition"><i class="fas fa-trash mr-1"></i> Remove Log</button>`;
-                    }
-                    html += `
-                    <tr class="hover:bg-gray-900/40 transition">
-                        <td class="px-6 py-4 font-bold text-white">${req.clientName || 'Client'}</td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-full text-xs font-bold whitespace-nowrap">${req.type}</span></td>
-                        <td class="px-6 py-4 text-gray-300 max-w-sm truncate" title="${req.details}">${req.details}</td>
-                        <td class="px-6 py-4">${reqStatusBadge}</td>
-                        <td class="px-6 py-4 text-right">${reqAction}</td>
-                    </tr>`;
-                });
-                tbody.innerHTML = html;
-            } catch (error) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 bg-red-900/20 text-red-400 font-bold"><i class="fas fa-times-circle mr-2"></i>Error: ${error.message}</td></tr>`;
-            }
-        }
-        window.loadClientRequests = loadClientRequests;
-
-        window.approveClient = async (uid) => {
-            if(confirm("Authorize and activate Premium Plan for this client?")) {
-                await updateDoc(doc(db, "clients", uid), { status: "Active" });
-                loadClients();
-            }
-        };
-
-        window.declineClient = async (uid) => {
-            if(confirm("Decline payment? Client will be notified to re-verify UTR.")) {
-                await updateDoc(doc(db, "clients", uid), { status: "Declined" });
-                loadClients();
-            }
-        };
-
-        window.acceptRequest = async (reqId) => {
-            await updateDoc(doc(db, "clientRequests", reqId), { status: "Accepted" });
-            loadClientRequests();
-        };
-
-        window.rejectRequest = async (reqId) => {
-            await updateDoc(doc(db, "clientRequests", reqId), { status: "Rejected" });
-            loadClientRequests();
-        };
-
-        window.deleteRequest = async (reqId) => {
-            if(confirm("Remove this request log permanently?")) {
-                await deleteDoc(doc(db, "clientRequests", reqId));
-                loadClientRequests();
-            }
-        };
-
-        // Yahan par aapka purana code aadha cut ho gaya tha! Ab maine pura likh diya hai.
-        window.saveClientData = async (uid) => {
-            const websiteUrl = document.getElementById(`
+                    else reqStatusBadge = '<span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-
