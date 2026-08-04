@@ -1,51 +1,97 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-html { scroll-behavior: smooth; }
+html { 
+    scroll-behavior: smooth; 
+    /* Mobile ke liye tap highlight hataya taaki native app jaisa feel aaye */
+    -webkit-tap-highlight-color: transparent; 
+}
+
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: #030712; /* Tailwind gray-950 */
-    color: #ffffff;
+    color: #f8fafc; /* Slightly softer white for better eye comfort */
     overflow-x: hidden;
+    /* Font rendering ko crisp banane ke liye */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism Classes */
+/* Text Selection Styling (Premium detail) */
+::selection {
+    background-color: rgba(59, 130, 246, 0.3);
+    color: #ffffff;
+}
+
+/* Premium Glassmorphism */
 .glass {
-    background: rgba(17, 24, 39, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Depth add kiya */
 }
 
-.glass-hover:hover {
-    background: rgba(31, 41, 55, 0.8);
-    border-color: rgba(59, 130, 246, 0.4);
-    transform: translateY(-5px);
-    transition: all 0.3s ease;
+/* Hover & Mobile Active States */
+.glass-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth spring-like transition */
 }
 
-/* Text Gradients */
+/* Hover sirf desktop par kaam karega (preventing sticky hovers on mobile) */
+@media (hover: hover) { 
+    .glass-hover:hover {
+        background: rgba(31, 41, 55, 0.75);
+        border-color: rgba(59, 130, 246, 0.5);
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15); /* Blue glow effect */
+    }
+}
+
+/* Mobile tap feedback (jab user touch karega toh click feel aayega) */
+.glass-hover:active { 
+    transform: translateY(2px) scale(0.98);
+    transition: all 0.1s ease;
+}
+
+/* Text Gradients with Subtle Animation */
 .text-gradient {
     background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: textShine 5s linear infinite; /* Text me slight shine effect */
 }
+
 .text-gradient-gold {
-    background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* Background Patterns */
-.bg-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
+@keyframes textShine {
+    to { background-position: 200% center; }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #030712; }
-::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+/* Background Pattern Enhancement */
+.bg-pattern {
+    background-color: #030712;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+/* Modern Sleek Scrollbar */
+::-webkit-scrollbar { 
+    width: 6px; /* Patla scrollbar jo UI spoil nahi karega */
+}
+::-webkit-scrollbar-track { 
+    background: #030712; 
+}
+::-webkit-scrollbar-thumb { 
+    background: #1f2937; 
+    border-radius: 10px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+    background: #3b82f6; 
+}
 
 /* Utilities */
 .hidden-section { display: none !important; }
