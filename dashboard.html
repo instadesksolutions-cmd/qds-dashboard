@@ -1,91 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | QwickDeskSolutions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard | QwickDeskSolutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom UI Tweaks for Dashboard */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 1.15rem; /* Center of the icon */
+            width: 2px;
+            background: #1f2937; /* gray-800 */
+            z-index: 0;
+        }
+    </style>
 </head>
-<body class="bg-gray-950 flex min-h-screen text-white">
+<body class="bg-gray-950 flex min-h-screen text-white relative overflow-x-hidden font-sans">
+
+    <!-- Background Ambient Glows -->
+    <div class="fixed top-[-10%] left-[-10%] w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
 
     <!-- Mobile Header -->
-    <div class="md:hidden fixed top-0 w-full glass p-4 flex justify-between items-center z-50 border-b border-gray-800">
-        <span class="text-xl font-bold">QwickDesk</span>
-        <button id="logoutBtnMob" class="text-red-400 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 text-sm"><i class="fas fa-sign-out-alt"></i></button>
+    <div class="md:hidden fixed top-0 w-full glass-card p-4 flex justify-between items-center z-50 border-b border-gray-800/50">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-lg flex items-center justify-center">
+                <i class="fas fa-bolt text-white text-sm"></i>
+            </div>
+            <span class="text-lg font-bold">QwickDesk</span>
+        </div>
+        <button id="logoutBtnMob" class="text-red-400 bg-gray-900 w-10 h-10 rounded-xl border border-red-500/20 flex items-center justify-center hover:bg-red-500/10 transition">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
     </div>
 
     <!-- Desktop Sidebar -->
-    <aside class="hidden md:flex flex-col w-64 glass border-r border-gray-800 h-screen fixed">
-        <div class="p-6 border-b border-gray-800 flex items-center gap-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-bolt text-white"></i></div>
-            <span class="text-xl font-bold">QwickDesk</span>
+    <aside class="hidden md:flex flex-col w-72 glass-card border-r border-gray-800/50 h-screen fixed z-40">
+        <div class="p-6 border-b border-gray-800/50 flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.4)]">
+                <i class="fas fa-bolt text-white"></i>
+            </div>
+            <span class="text-2xl font-black tracking-tight">QwickDesk</span>
         </div>
-        <nav class="flex-grow p-4 space-y-2">
-            <a href="#" class="flex items-center gap-3 bg-blue-600/10 text-blue-400 px-4 py-3 rounded-xl border border-blue-500/20"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="checkout.html" class="flex items-center gap-3 text-gray-400 hover:text-white px-4 py-3 rounded-xl hover:bg-gray-800 transition"><i class="fas fa-shopping-cart"></i> Buy Plan</a>
+        <nav class="flex-grow p-4 space-y-3 mt-4">
+            <a href="#" class="flex items-center gap-3 bg-blue-600/15 text-blue-400 px-5 py-3.5 rounded-2xl border border-blue-500/30 font-bold transition">
+                <i class="fas fa-home text-lg w-5"></i> Dashboard
+            </a>
+            <a href="checkout.html" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800/50 px-5 py-3.5 rounded-2xl transition font-semibold">
+                <i class="fas fa-shopping-cart text-lg w-5"></i> Buy / Upgrade Plan
+            </a>
         </nav>
-        <div class="p-4 border-t border-gray-800">
-            <button id="logoutBtnDesk" class="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl transition border border-gray-700"><i class="fas fa-sign-out-alt"></i> Secure Logout</button>
+        <div class="p-6 border-t border-gray-800/50">
+            <button id="logoutBtnDesk" class="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 text-gray-300 py-3.5 rounded-xl transition border border-gray-800 font-bold">
+                <i class="fas fa-power-off"></i> Secure Logout
+            </button>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="w-full md:ml-64 p-4 pt-20 md:pt-8 md:p-8 relative">
-        <div class="max-w-4xl mx-auto space-y-6">
+    <main class="w-full md:ml-72 p-4 pt-24 md:pt-10 md:p-10 relative z-10">
+        <div class="max-w-3xl mx-auto space-y-6">
             
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 glass p-6 rounded-3xl border border-gray-800">
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold mb-1">Welcome back, <span id="userName" class="text-blue-400">Client</span>!</h1>
-                    <p class="text-gray-400 text-sm">Track your website build status here.</p>
+            <!-- Welcome Card -->
+            <div class="glass-card p-6 md:p-8 rounded-3xl border-t-4 border-blue-500 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                <div class="relative z-10">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-1 text-white">Welcome back,<br><span id="userName" class="text-blue-400 font-black tracking-tight drop-shadow-md">Client</span>!</h1>
+                    <p class="text-gray-400 text-sm mt-2 font-medium">Track your website build status here.</p>
                 </div>
                 
-                <!-- Premium Button (HIDDEN BY DEFAULT, SHOWS ONLY IF APPROVED) -->
-                <a href="premium.html" id="goToPremiumBtn" class="hidden bg-gradient-to-r from-purple-600 to-blue-500 text-white w-full md:w-auto text-center px-6 py-3 rounded-xl font-bold shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:scale-105 transition">
-                    <i class="fas fa-crown text-yellow-400 mr-2"></i> Premium Panel
-                </a>
-                
-                <!-- Select Plan Button (VISIBLE BY DEFAULT NOW) -->
-                <a href="checkout.html" id="upgradeBtn" class="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black w-full md:w-auto text-center px-6 py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition">
-                    <i class="fas fa-arrow-up mr-2"></i> Select Plan
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="glass p-6 rounded-2xl border border-gray-700/50">
-                    <p class="text-sm text-gray-400 font-semibold uppercase tracking-wider mb-2">Account Status</p>
-                    <p class="text-2xl font-bold text-white mb-2" id="dashPlan">Basic Profile</p>
-                    <div><span id="dashStatus" class="bg-gray-800 border border-gray-600 text-gray-300 px-3 py-1 rounded-full text-xs font-bold">New Account</span></div>
-                </div>
-                
-                <!-- ONLY ONE DIRECT LINE NUMBER HERE -->
-                <div class="glass p-6 rounded-2xl border border-blue-500/30 bg-blue-900/10 flex flex-col justify-center">
-                    <p class="text-sm text-blue-400/80 font-semibold uppercase tracking-wider mb-2">Support Direct Line</p>
-                    <div class="flex flex-col gap-3 mt-2">
-                        <a href="https://wa.me/919920048859" target="_blank" class="text-sm font-bold text-green-400 hover:text-green-300 flex items-center"><i class="fab fa-whatsapp text-xl w-8"></i> Chat on WhatsApp</a>
-                        <a href="tel:9920048859" class="text-sm font-bold text-blue-400 hover:text-blue-300 flex items-center"><i class="fas fa-phone-alt text-lg w-8"></i> Call: +91 9920048859</a>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="w-full md:w-auto relative z-10">
+                    <a href="premium.html" id="goToPremiumBtn" class="hidden w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-center px-8 py-3.5 rounded-2xl font-bold shadow-[0_0_20px_rgba(168,85,247,0.4)] transition flex items-center justify-center gap-2">
+                        <i class="fas fa-rocket"></i> Launch Premium
+                    </a>
+                    
+                    <a href="checkout.html" id="upgradeBtn" class="w-full bg-gray-900 border border-yellow-500/50 hover:bg-yellow-500/10 text-yellow-400 text-center px-8 py-3.5 rounded-2xl font-bold transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(234,179,8,0.15)]">
+                        <i class="fas fa-crown"></i> Select Plan
+                    </a>
                 </div>
             </div>
 
-            <div class="glass p-6 md:p-8 rounded-3xl border border-gray-700/50">
-                <h3 class="text-lg font-bold text-white mb-8 flex items-center gap-2"><i class="fas fa-tasks text-blue-500"></i> Project Timeline</h3>
-                <div class="relative pl-8 space-y-10 before:absolute before:inset-y-0 before:left-[1.2rem] before:w-1 before:bg-gray-800">
-                    <div class="relative">
-                        <div class="absolute -left-10 w-8 h-8 rounded-full bg-blue-600 border-4 border-gray-950 flex items-center justify-center z-10"><i class="fas fa-check text-white text-xs"></i></div>
-                        <h4 class="font-bold text-white text-base md:text-lg">Account Created</h4>
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Account Status -->
+                <div class="glass-card p-6 md:p-7 rounded-3xl border border-gray-800 hover:border-gray-700 transition flex flex-col justify-center">
+                    <p class="text-[11px] text-gray-400 font-bold uppercase tracking-widest mb-3"><i class="fas fa-shield-alt mr-1"></i> Account Status</p>
+                    <p class="text-3xl font-black text-white mb-4" id="dashPlan">Basic</p>
+                    <div class="mt-auto">
+                        <span id="dashStatus" class="bg-gray-900 border border-gray-700 text-gray-400 px-4 py-1.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5">
+                            <i class="fas fa-lock text-[10px]"></i> New Account
+                        </span>
                     </div>
-                    <div class="relative">
-                        <div id="step2Icon" class="absolute -left-10 w-8 h-8 rounded-full bg-gray-800 border-4 border-gray-950 flex items-center justify-center z-10 text-gray-500 text-sm font-bold">2</div>
-                        <h4 class="font-bold text-gray-300 text-base md:text-lg" id="step2Title">Payment Verification</h4>
-                        <p class="text-gray-500 text-sm mt-1" id="step2Text">Awaiting plan selection.</p>
+                </div>
+                
+                <!-- Support Direct Line -->
+                <div class="glass-card p-6 md:p-7 rounded-3xl border border-gray-800 hover:border-gray-700 transition flex flex-col justify-center relative overflow-hidden">
+                    <!-- Glow effect for support card -->
+                    <div class="absolute right-0 bottom-0 w-24 h-24 bg-blue-500/5 rounded-full blur-xl"></div>
+                    
+                    <p class="text-[11px] text-blue-400 font-bold uppercase tracking-widest mb-4"><i class="fas fa-headset mr-1"></i> Support Direct Line</p>
+                    <div class="flex flex-col gap-4 relative z-10">
+                        <a href="https://wa.me/919920048859" target="_blank" class="flex items-center gap-3 text-gray-300 hover:text-green-400 transition group">
+                            <div class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center group-hover:bg-green-500/10 group-hover:border-green-500/30 transition">
+                                <i class="fab fa-whatsapp text-xl text-green-500 group-hover:scale-110 transition"></i>
+                            </div>
+                            <span class="font-bold text-sm">Chat on WhatsApp</span>
+                        </a>
+                        <a href="tel:9920048859" class="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition group">
+                            <div class="w-10 h-10 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:border-blue-500/30 transition">
+                                <i class="fas fa-phone-alt text-lg text-blue-500 group-hover:scale-110 transition"></i>
+                            </div>
+                            <span class="font-bold text-sm">Call: +91 9920048859</span>
+                        </a>
                     </div>
+                </div>
+            </div>
+
+            <!-- Project Timeline -->
+            <div class="glass-card p-6 md:p-8 rounded-3xl border border-gray-800">
+                <h3 class="text-base font-bold text-gray-300 mb-8 flex items-center gap-2 uppercase tracking-wide">
+                    <i class="fas fa-tasks text-blue-500"></i> Project Timeline
+                </h3>
+                
+                <div class="relative timeline-line pl-10 space-y-10">
+                    
+                    <!-- Step 1: Account Created -->
+                    <div class="relative z-10">
+                        <div class="absolute -left-10 w-9 h-9 rounded-full bg-blue-600 border-[3px] border-gray-950 flex items-center justify-center shadow-[0_0_10px_rgba(37,99,235,0.5)]">
+                            <i class="fas fa-check text-white text-sm"></i>
+                        </div>
+                        <div class="pt-1.5">
+                            <h4 class="font-bold text-white text-lg">Account Created</h4>
+                            <p class="text-gray-500 text-xs md:text-sm mt-1">Profile successfully registered.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Verification Status -->
+                    <div class="relative z-10">
+                        <div id="step2Icon" class="absolute -left-10 w-9 h-9 rounded-full bg-gray-900 border-[3px] border-gray-800 flex items-center justify-center text-gray-500 text-sm font-bold">
+                            2
+                        </div>
+                        <div class="pt-1.5">
+                            <h4 class="font-bold text-gray-500 text-lg" id="step2Title">Payment Verification</h4>
+                            <p class="text-gray-600 text-xs md:text-sm mt-1" id="step2Text">Awaiting plan selection.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </main>
 
+    <!-- Firebase Logic -->
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -100,40 +181,57 @@
                     document.getElementById('dashPlan').innerText = data.planName || 'Basic Access';
                     
                     const statusBadge = document.getElementById('dashStatus');
-                    statusBadge.innerText = data.status || 'Basic';
                     
                     if (data.status === 'Pending Verification') {
-                        // Hide select plan, show pending
+                        // Pending State Styling (Yellow)
                         document.getElementById('upgradeBtn').classList.add('hidden');
-                        statusBadge.className = "bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold animate-pulse";
-                        document.getElementById('step2Title').className = "font-bold text-yellow-400 text-lg";
+                        statusBadge.innerHTML = '<i class="fas fa-clock text-[10px]"></i> Pending Verification';
+                        statusBadge.className = "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 px-4 py-1.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5 animate-pulse";
+                        
+                        document.getElementById('step2Title').className = "font-bold text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(234,179,8,0.4)]";
                         document.getElementById('step2Title').innerText = "Verifying UTR...";
+                        document.getElementById('step2Text').className = "text-yellow-500/70 text-xs md:text-sm mt-1 font-mono bg-yellow-500/10 px-2 py-1 rounded inline-block mt-2";
                         document.getElementById('step2Text').innerText = `Ref: ${data.utr}`;
-                        document.getElementById('step2Icon').className = "absolute -left-10 w-8 h-8 rounded-full bg-yellow-500 border-4 border-gray-950 flex items-center justify-center z-10";
-                        document.getElementById('step2Icon').innerHTML = '<i class="fas fa-spinner fa-spin text-gray-950 text-xs"></i>';
+                        
+                        document.getElementById('step2Icon').className = "absolute -left-10 w-9 h-9 rounded-full bg-yellow-500/20 border-[3px] border-yellow-500 flex items-center justify-center text-yellow-400";
+                        document.getElementById('step2Icon').innerHTML = '<i class="fas fa-spinner fa-spin text-sm"></i>';
+                        
                     } else if (data.status === 'Active') {
-                        // Hide select plan, show Premium button
+                        // Active State Styling (Green/Premium)
                         document.getElementById('upgradeBtn').classList.add('hidden');
                         document.getElementById('goToPremiumBtn').classList.remove('hidden');
-                        statusBadge.className = "bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold";
+                        
+                        statusBadge.innerHTML = '<i class="fas fa-check-circle text-[10px]"></i> Active';
+                        statusBadge.className = "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5";
+                        
                         document.getElementById('step2Title').className = "font-bold text-white text-lg";
                         document.getElementById('step2Title').innerText = "Payment Verified";
-                        document.getElementById('step2Text').innerText = "Fund securely received.";
-                        document.getElementById('step2Icon').className = "absolute -left-10 w-8 h-8 rounded-full bg-emerald-500 border-4 border-gray-950 flex items-center justify-center z-10";
-                        document.getElementById('step2Icon').innerHTML = '<i class="fas fa-check text-gray-950 text-xs"></i>';
+                        document.getElementById('step2Text').className = "text-emerald-500/80 text-xs md:text-sm mt-1";
+                        document.getElementById('step2Text').innerText = "Fund securely received. Access granted.";
+                        
+                        document.getElementById('step2Icon').className = "absolute -left-10 w-9 h-9 rounded-full bg-emerald-600 border-[3px] border-gray-950 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.5)]";
+                        document.getElementById('step2Icon').innerHTML = '<i class="fas fa-check text-white text-sm"></i>';
+                        
                     } else if (data.status === 'Declined') {
-                        // Show select plan button so they can re-enter payment
-                        statusBadge.className = "bg-red-500/20 border border-red-500/50 text-red-400 px-3 py-1 rounded-full text-xs font-bold";
+                        // Declined State Styling (Red)
+                        statusBadge.innerHTML = '<i class="fas fa-times-circle text-[10px]"></i> Declined';
+                        statusBadge.className = "bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-1.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5";
+                        
                         document.getElementById('step2Title').className = "font-bold text-red-400 text-lg";
                         document.getElementById('step2Title').innerText = "Payment Declined";
-                        document.getElementById('step2Text').innerText = "Please verify your UTR and submit again.";
-                        document.getElementById('upgradeBtn').innerHTML = '<i class="fas fa-sync-alt mr-2"></i> Resubmit Payment';
+                        document.getElementById('step2Text').className = "text-red-400/80 text-xs md:text-sm mt-1";
+                        document.getElementById('step2Text').innerText = "Please verify your UTR and try again.";
+                        
+                        document.getElementById('upgradeBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Resubmit Payment';
+                        document.getElementById('upgradeBtn').className = "w-full bg-red-900/40 border border-red-500/50 hover:bg-red-900/60 text-red-400 text-center px-8 py-3.5 rounded-2xl font-bold transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.2)]";
                     }
                 }
-            } else { window.location.href = 'login.html'; }
+            } else { 
+                window.location.href = 'login.html'; 
+            }
         });
 
-        // Logout hamesha index.html (Home Page) par hi bhejta hai taaki account secure rahe.
+        // Logout
         const logout = () => signOut(auth).then(() => window.location.href='index.html');
         document.getElementById('logoutBtnDesk').addEventListener('click', logout);
         if(document.getElementById('logoutBtnMob')) document.getElementById('logoutBtnMob').addEventListener('click', logout);
